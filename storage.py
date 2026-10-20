@@ -17,8 +17,14 @@ def initialize():
     (ROOT/'sources').mkdir(parents=True,exist_ok=True)
     for c in CELLS.values():
         for module,children in MODULES:
+            parent=ROOT/'projects'/c['project']/c['chemistry']/c['size']/module
+            parent.mkdir(parents=True,exist_ok=True)
+            # Empty legacy subfolders become sheets; existing files are untouched.
             for child in children:
-                (ROOT/'projects'/c['project']/c['chemistry']/c['size']/module/safe_folder(child)).mkdir(parents=True,exist_ok=True)
+                legacy=parent/safe_folder(child)
+                if legacy.is_dir() and not legacy.is_symlink():
+                    try:legacy.rmdir()
+                    except OSError:pass
     # Short team folders are relative symlinks, never copies of engineering files.
     for c in CELLS.values():
         team_root=ROOT/'teams'/c['project']/c['chemistry']/c['size']
@@ -50,6 +56,7 @@ def add_document(cell,module,folder,filename,content,meta):
         cursor=db.execute('INSERT INTO documents(cell,module,folder,filename,sha256,pic,revision,doe_id,build_lot_id,cell_id,created_at) VALUES(?,?,?,?,?,?,?,?,?,?,?)',(cell,module,folder,filename,digest,meta['pic'],meta['revision'],meta.get('doe_id',''),meta.get('build_lot_id',''),meta.get('cell_id',''),datetime.now(timezone.utc).isoformat()))
         ident=cursor.lastrowid
     ref={'document_id':ident,'filename':filename,'sha256':digest,'source':f'sources/{digest}','revision':meta['revision'],'pic':meta['pic']}
+    folder_path(cell,module,folder).mkdir(parents=True,exist_ok=True)
     (folder_path(cell,module,folder)/f'{ident:06d}.source.json').write_text(json.dumps(ref,ensure_ascii=False,indent=2))
     return ident
 

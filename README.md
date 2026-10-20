@@ -1,60 +1,91 @@
-# Battery R&D Dashboard · Python
+# Battery R&D Dashboard
 
-Dashboard Flask với giao diện nền tối theo mẫu: sidebar phẳng, tổng quan dự án và liên kết task chi tiết.
+Ứng dụng Python/Flask, giao diện tối theo mẫu, sidebar phẳng và dữ liệu cập nhật từ Excel. **Mỗi mục chức năng là một file `.xlsx`; nội dung con là các sheet**, không tạo file riêng cho từng dòng thông tin.
 
-## Chạy ứng dụng
+## Chạy nội bộ
 
 ```bash
-cd /workspace/battery-dashboard
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
-.venv/bin/python app.py
+.venv/bin/python serve.py --local --port 5000
 ```
 
-Server phát triển dùng port 5000. Plotly được lưu local kèm license. Không cần tài khoản hoặc database ngoài.
+Dùng Waitress, một process với 8 thread. `--local` chỉ bind loopback và không yêu cầu đăng nhập. Python 3.11+, Linux (`fcntl` để khóa file).
 
-## Folder ngắn gọn cho các team
+Ứng dụng tự tạo các workbook trống cho 5 cell thật và một **dự án ví dụ riêng**. Khởi động lại không ghi đè file đã tồn tại. Giao diện mặc định mở dự án `[VÍ DỤ] DEMO-LFP-01`; chọn `[THỰC]` để nhập dữ liệu vận hành của cell.
 
-Xem [cấu trúc team](docs/TEAM_FOLDERS.md). Các folder `01_PMO` đến `10_Documents` nằm dưới `data/teams/<Project>/<Chemistry>/<Cell Size>/`, liên kết tới 10 module chuẩn, không sao chép dữ liệu. Bấm đường dẫn cell dưới tiêu đề để mở bộ chọn và folder của team.
+## Cách team cập nhật
 
-## Điều hướng
+1. Chọn **Dự án → Chemistry → Cell Size** bằng đường dẫn dưới tiêu đề.
+2. Chọn folder team, hoặc mục ở sidebar.
+3. Chọn **File Excel → Sheet → Cập nhật sheet**.
+4. Nhập hoặc dán vùng ô từ Excel; cột `*` là bắt buộc. Bấm **Lưu sheet**.
+5. File Excel trên server được lưu thật; dashboard tính lại dữ liệu. Tải lại trang vẫn giữ thay đổi.
 
-Sidebar chỉ có các mục giống ảnh mẫu:
+Có thể chỉnh trực tiếp **file trên server** rồi lưu: dashboard kiểm tra lại mỗi 30 giây. **File tải xuống máy cá nhân là bản sao**; sửa bản sao không tự đồng bộ về server. Không có nút nộp dữ liệu hoặc Data Sources. Không đổi tên sheet/header, không thêm sheet tùy ý và không nhập công thức Excel; nhập giá trị, app tính KPI ở backend.
 
-- **QUẢN LÝ DỰ ÁN:** Tổng quan dự án, Cấu trúc & PIC, Execution Control, Master Timeline, Báo cáo tuần, Rủi ro & sự vụ.
-- **PHÁT TRIỂN CELL:** DOE & Thử nghiệm, Công thức DOE, BOM & Vật liệu.
+Bấm **Tải bộ Excel của cell** trong phần chọn cell để lấy toàn bộ file theo team. Xem [hướng dẫn vận hành](docs/OPERATIONS.md), [folder ngắn gọn](docs/TEAM_FOLDERS.md) và [danh mục file/sheet](docs/WORKBOOKS.md).
 
-Không có cây thư mục trên sidebar. Bấm đường dẫn cell dưới tiêu đề để mở bộ chọn **Project → Chemistry → Cell Size**. Các module và thư mục chức năng chi tiết nằm trong dropdown ở trang nội dung; cấu trúc chuẩn vẫn được giữ nguyên.
+## File chính
 
-## Tổng quan → Task chi tiết
+```text
+01_PMO/
+├── Project Information & KPI.xlsx  # Project Information, Budget
+├── Target vs Actual.xlsx          # Targets, Energy density, Cell capacity,
+│                                 # Cycle life predicted, Cell cost Prototype/SOP
+├── Master Timeline.xlsx           # Project Milestones
+├── Cấu trúc & PIC.xlsx
+├── Execution Control.xlsx
+├── Báo cáo tuần.xlsx
+├── Rủi ro & Sự vụ.xlsx
+└── Project Status.xlsx
+```
 
-- Bấm thẻ **Tiến độ, Ngân sách, Milestones hoặc Issues** để mở danh sách task liên quan.
-- Bấm từng KPI **Energy density, Cell capacity, Cycle life hoặc Cell cost** để xem task của KPI đó.
-- Bấm **Chi tiết** trong bảng để xem task ID, PIC, deadline, trạng thái, DOE ID, Build Lot ID và Cell ID.
-- Mỗi cell có phạm vi task riêng; tìm kiếm, lọc trạng thái và xuất CSV từ danh sách.
-- Bấm **Tổng quan dự án** ở sidebar để quay lại.
+Các file còn lại nằm theo team Design, Materials, DOE, Manufacturing, Testing, Analysis, Cost, Data và Documents. Tên sheet có `/` được đổi thành `-` và rút gọn tối đa 31 ký tự theo giới hạn Excel. Header kỹ thuật được ghi trong file mẫu và đánh dấu bắt buộc trong editor. Một số thanh ghi kỹ thuật dùng cột text theo bảng yêu cầu; chúng chưa tự tham gia tính KPI.
 
-**Cập nhật KPI** và **Dự án mới** là thao tác mô phỏng, chỉ lưu tại trình duyệt theo cell. Dự án mới tạo nhãn chương trình gắn với cell hiện có, không tạo project/chemistry/cell mới trên backend. Các task và thông số ngân sách/tiến độ mẫu không tự tính lại từ KPI đã sửa.
+## Tổng quan tính từ dữ liệu đã lưu
 
-## Nội dung theo yêu cầu
+- Tiến độ: `Σ(weight × completion) / Σ(weight)`, loại milestone Cancelled.
+- Ngân sách còn: approved − actual − committed; không tự cộng nhiều currency.
+- Milestones: Completed/Approved, có actual date và completion=100.
+- Issues: status khác Closed; Critical → Red, overdue/high → Amber, bình thường → Green, chưa có dữ liệu → Grey.
+- Energy density: tổng discharge energy / tổng mass của nhóm Approved mới nhất, cùng DOE/condition.
+- Capacity: trung bình Approved ở ngày mới nhất, khớp DOE/condition/C-rate/temperature.
+- Cycle life: dự đoán Approved, `validated=Yes`, đúng retention threshold; luôn ghi là dự đoán. `validated` và `approval` là xác nhận do team nhập, không phải app tự kiểm định mô hình.
+- Cost: quantity × unit price + process + overhead, tách **Prototype** và **SOP**, cùng currency.
 
-Bảng nội dung được cấu hình từ file người dùng cung cấp trong `configuration/content_catalog.json`; bản gốc nằm tại `docs/USER_REQUIREMENTS.tsv`. Đường dẫn và công thức được giữ nội bộ để tích hợp sau này. UI không hiển thị Data Sources, không có cây folder trong sidebar và không có nút nộp dữ liệu. Các định nghĩa chưa có dữ liệu thật hiển thị trạng thái xám **Chưa kết nối**.
+Không có số mô phỏng làm fallback trong `[THỰC]`. Dữ liệu thiếu / chưa Approved / điều kiện không thống nhất hiển thị `—` và cảnh báo phù hợp. Task chi tiết lấy từ các sheet, không sinh task giả.
 
-## Dữ liệu và giới hạn
+## Cycler = 3D Cell Digital Twin
 
-**Tất cả số liệu tổng quan, task, biểu đồ, deadlines và nguồn `demo://` là dữ liệu minh họa, không phải kết quả thử nghiệm thực tế.** Biểu đồ có chế độ DOE theo tuần, cycle life và discharge.
+Đã tích hợp mã từ [truonggiang023/Digital-Twin](https://github.com/truonggiang023/Digital-Twin), commit `1b999d16822729adfb4df463804af0f8906a0034`:
 
-[Cây folder đầy đủ](docs/FOLDER_TREE.md) vẫn được tạo trong `data/projects/` cho 5 cell, mỗi cell có 10 module. PRISMATIC / SIB chưa có cell size. Ký tự `/` trong tên thư mục được đổi thành ` - ` trên filesystem.
+- Tủ Three.js, xoay/zoom/chọn cell, màu theo nhiệt độ.
+- Rack gốc 12 kênh; dự án ví dụ prismatic hiển thị 6 kênh được gán dự án đó.
+- Start/Pause/Reset/speed dùng cùng mô hình Python gốc. Các lệnh áp dụng toàn rack.
+- Chế độ **Trạng thái từ sheet** dùng `Cycler - 3D Cell Digital Twin.xlsx` với `Cell Mapping` / `Cell State`.
 
-File đã có và metadata được giữ nguyên: `data/sources/` chứa nguồn SHA-256, `data/metadata.sqlite3` chứa metadata, folder chứa liên kết `.source.json`. Sao lưu toàn bộ `data/` cùng nhau. Chép file trực tiếp vào folder chưa tự tạo record trên dashboard. Giao diện không có nút hoặc form nộp dữ liệu.
+**Mô hình gốc 2.5–2.775 Ah, 3.0–4.2 V chưa hiệu chuẩn cho cell LFP 105 Ah.** Mô phỏng chỉ được điều khiển trong dataset ví dụ, không ghi vào KPI Approved và không điều khiển thiết bị thật. Telemetry runtime mất khi Reset/restart; trạng thái đã lưu trong Excel vẫn giữ. Chưa có STEP import hoặc trường nhiệt 3D theo không gian. [Nguồn mã và giới hạn](integrations/digital_twin/PROVENANCE.md).
 
-Backend intake và preview vẫn tồn tại để tích hợp sau này. Prototype chưa có đăng nhập, phân quyền, quy trình duyệt, đồng bộ nguồn hoặc tính KPI tự động. STEP có thể lưu/tải qua API nhưng chưa có bộ đọc/viewer STEP. Preview backend hỗ trợ CSV, XLSX và trích xuất text PDF. Không expose công khai hoặc đưa dữ liệu kỹ thuật nhạy cảm lên prototype.
+## Lưu trữ và dùng chung
 
-## Kiểm tra
+Dữ liệu thật ở `data/projects/`, ví dụ ở `data/example_data/projects/`. `data/teams/` là shortcut tới module chuẩn. Lần chuyển đổi này chỉ bỏ folder con cũ nếu rỗng; file cũ được giữ nguyên. Các nguồn gốc cũ ở `data/sources/` không bị sửa.
+
+Mỗi lần lưu từ app có bản workbook cũ trong `workbook_history/`, audit, khóa file theo cell và kiểm tra revision chống ghi đè khi hai người cùng sửa. Bản hiện tại được thay bằng thao tác atomic. Sao lưu **toàn bộ `data/`**, gồm history và dữ liệu cũ.
+
+Để dùng chung, đặt `DASHBOARD_USERNAME` và `DASHBOARD_PASSWORD` qua biến môi trường bảo mật của máy chủ rồi chạy:
+
+```bash
+.venv/bin/python serve.py --host 0.0.0.0 --port 5000
+```
+
+Đặt sau reverse proxy HTTPS và lưu `data/` trên persistent volume. Đây là đăng nhập dùng chung, chưa có tài khoản cá nhân, RBAC hoặc quy trình phê duyệt độc lập. Chưa triển khai host công cộng trong phiên này. Không dùng nhiều WSGI process vì rack mô phỏng là trạng thái chung trong một process. Tránh sửa Excel ngoài server đồng thời với editor; lock của app không được Excel ngoài app tuân theo.
+
+## Kiểm thử
 
 ```bash
 .venv/bin/python -m unittest discover -s tests -v
 node --check static/app.js
 ```
 
-Xem [kiến trúc](docs/ARCHITECTURE.md) cho các hướng tích hợp dữ liệu thật.
+Bộ kiểm thử xác minh tính KPI, tách dữ liệu thật/ví dụ, revision conflicts, cập nhật Excel ngoài app, điều kiện đo, file history, đăng nhập, mapping cell và safety STOP của mô hình gốc.

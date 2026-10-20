@@ -1,381 +1,71 @@
-# Cây thư mục Battery R&D
+# Cây folder đang vận hành
 
-Các đường dẫn bên dưới nằm trong `data/projects/`. Mỗi cell có đủ 10 module và tất cả thư mục con chuẩn.
+Project → Chemistry → Cell Size → Team/module → File chức năng → Sheet.
 
 ```text
-BATTERY R&D DASHBOARD
+BATTERY R&D
 01_CYLINDRICAL
   LFP
     40135
-      00_Project_Management
-        Project Information & KPI
-        Target vs Actual
-        Project Status
-        Organization Structure & PIC
-        Execution Control
-        Master Timeline
-        Weekly Report
-        Risk & Issue Register
-      01_Cell_Design
-        Cell Specifications
-        Electrochemical Design
-        Mechanical Design
-        2D & 3D Drawings
-        Specifications & GD&T
-        Design Revision
-      02_Materials
-        Cathode
-        Anode
-        Separator
-        Electrolyte
-        Other Materials
-        Material BOM & COA
-      03_DOE
-        DOE Master Plan
-        DOE Design Parameters
-        DOE Run Tracking
-        DOE Results
-        DOE Comparison
-      04_Cell_Manufacturing
-        Electrode Manufacturing
-        Cell Assembly
-        Formation & Aging
-        Production Control
-        Process QC & Yield
-        Cell Traceability
-      05_Validation_Testing
-        Test Plan & Matrix
-        Sample Tracking
-        Electrical Tests
-        Mechanical Tests
-        Safety Tests
-        Environmental Tests
-        Test Data & Reports
-      06_Cell_Analysis
-        Electrical Performance
-        Cycle Life Analysis
-        Thermal Analysis
-        Mechanical Analysis
-        Teardown / SEM / EDS
-        Failure Analysis / RCA / CAPA
-      07_Supplier_Cost
-        Supplier Management
-        Supplier Quotation
-        Cell BOM
-        Prototype & SOP Cost
-        Cost Tracking
-      08_Data_Analytics
-        Cycler Raw Data
-        Processed Curve Data
-        Cycler Channel / Cell Mapping
-        Cell Performance Summary
-        Simulation Data
-        DOE Comparison Analytics
-        3D Virtual Operation
-        Dashboard Reports
-      09_Document_Control
-        Engineering Drawings
-        Technical Specifications
-        Standards & Requirements
-        Revision History
-        Approved Documents
     21700
-      00_Project_Management
-        Project Information & KPI
-        Target vs Actual
-        Project Status
-        Organization Structure & PIC
-        Execution Control
-        Master Timeline
-        Weekly Report
-        Risk & Issue Register
-      01_Cell_Design
-        Cell Specifications
-        Electrochemical Design
-        Mechanical Design
-        2D & 3D Drawings
-        Specifications & GD&T
-        Design Revision
-      02_Materials
-        Cathode
-        Anode
-        Separator
-        Electrolyte
-        Other Materials
-        Material BOM & COA
-      03_DOE
-        DOE Master Plan
-        DOE Design Parameters
-        DOE Run Tracking
-        DOE Results
-        DOE Comparison
-      04_Cell_Manufacturing
-        Electrode Manufacturing
-        Cell Assembly
-        Formation & Aging
-        Production Control
-        Process QC & Yield
-        Cell Traceability
-      05_Validation_Testing
-        Test Plan & Matrix
-        Sample Tracking
-        Electrical Tests
-        Mechanical Tests
-        Safety Tests
-        Environmental Tests
-        Test Data & Reports
-      06_Cell_Analysis
-        Electrical Performance
-        Cycle Life Analysis
-        Thermal Analysis
-        Mechanical Analysis
-        Teardown / SEM / EDS
-        Failure Analysis / RCA / CAPA
-      07_Supplier_Cost
-        Supplier Management
-        Supplier Quotation
-        Cell BOM
-        Prototype & SOP Cost
-        Cost Tracking
-      08_Data_Analytics
-        Cycler Raw Data
-        Processed Curve Data
-        Cycler Channel / Cell Mapping
-        Cell Performance Summary
-        Simulation Data
-        DOE Comparison Analytics
-        3D Virtual Operation
-        Dashboard Reports
-      09_Document_Control
-        Engineering Drawings
-        Technical Specifications
-        Standards & Requirements
-        Revision History
-        Approved Documents
   SIB
     40135
-      00_Project_Management
-        Project Information & KPI
-        Target vs Actual
-        Project Status
-        Organization Structure & PIC
-        Execution Control
-        Master Timeline
-        Weekly Report
-        Risk & Issue Register
-      01_Cell_Design
-        Cell Specifications
-        Electrochemical Design
-        Mechanical Design
-        2D & 3D Drawings
-        Specifications & GD&T
-        Design Revision
-      02_Materials
-        Cathode
-        Anode
-        Separator
-        Electrolyte
-        Other Materials
-        Material BOM & COA
-      03_DOE
-        DOE Master Plan
-        DOE Design Parameters
-        DOE Run Tracking
-        DOE Results
-        DOE Comparison
-      04_Cell_Manufacturing
-        Electrode Manufacturing
-        Cell Assembly
-        Formation & Aging
-        Production Control
-        Process QC & Yield
-        Cell Traceability
-      05_Validation_Testing
-        Test Plan & Matrix
-        Sample Tracking
-        Electrical Tests
-        Mechanical Tests
-        Safety Tests
-        Environmental Tests
-        Test Data & Reports
-      06_Cell_Analysis
-        Electrical Performance
-        Cycle Life Analysis
-        Thermal Analysis
-        Mechanical Analysis
-        Teardown / SEM / EDS
-        Failure Analysis / RCA / CAPA
-      07_Supplier_Cost
-        Supplier Management
-        Supplier Quotation
-        Cell BOM
-        Prototype & SOP Cost
-        Cost Tracking
-      08_Data_Analytics
-        Cycler Raw Data
-        Processed Curve Data
-        Cycler Channel / Cell Mapping
-        Cell Performance Summary
-        Simulation Data
-        DOE Comparison Analytics
-        3D Virtual Operation
-        Dashboard Reports
-      09_Document_Control
-        Engineering Drawings
-        Technical Specifications
-        Standards & Requirements
-        Revision History
-        Approved Documents
     21700
-      00_Project_Management
-        Project Information & KPI
-        Target vs Actual
-        Project Status
-        Organization Structure & PIC
-        Execution Control
-        Master Timeline
-        Weekly Report
-        Risk & Issue Register
-      01_Cell_Design
-        Cell Specifications
-        Electrochemical Design
-        Mechanical Design
-        2D & 3D Drawings
-        Specifications & GD&T
-        Design Revision
-      02_Materials
-        Cathode
-        Anode
-        Separator
-        Electrolyte
-        Other Materials
-        Material BOM & COA
-      03_DOE
-        DOE Master Plan
-        DOE Design Parameters
-        DOE Run Tracking
-        DOE Results
-        DOE Comparison
-      04_Cell_Manufacturing
-        Electrode Manufacturing
-        Cell Assembly
-        Formation & Aging
-        Production Control
-        Process QC & Yield
-        Cell Traceability
-      05_Validation_Testing
-        Test Plan & Matrix
-        Sample Tracking
-        Electrical Tests
-        Mechanical Tests
-        Safety Tests
-        Environmental Tests
-        Test Data & Reports
-      06_Cell_Analysis
-        Electrical Performance
-        Cycle Life Analysis
-        Thermal Analysis
-        Mechanical Analysis
-        Teardown / SEM / EDS
-        Failure Analysis / RCA / CAPA
-      07_Supplier_Cost
-        Supplier Management
-        Supplier Quotation
-        Cell BOM
-        Prototype & SOP Cost
-        Cost Tracking
-      08_Data_Analytics
-        Cycler Raw Data
-        Processed Curve Data
-        Cycler Channel / Cell Mapping
-        Cell Performance Summary
-        Simulation Data
-        DOE Comparison Analytics
-        3D Virtual Operation
-        Dashboard Reports
-      09_Document_Control
-        Engineering Drawings
-        Technical Specifications
-        Standards & Requirements
-        Revision History
-        Approved Documents
 02_PRISMATIC
   LFP01
     52148117
-      00_Project_Management
-        Project Information & KPI
-        Target vs Actual
-        Project Status
-        Organization Structure & PIC
-        Execution Control
-        Master Timeline
-        Weekly Report
-        Risk & Issue Register
-      01_Cell_Design
-        Cell Specifications
-        Electrochemical Design
-        Mechanical Design
-        2D & 3D Drawings
-        Specifications & GD&T
-        Design Revision
-      02_Materials
-        Cathode
-        Anode
-        Separator
-        Electrolyte
-        Other Materials
-        Material BOM & COA
-      03_DOE
-        DOE Master Plan
-        DOE Design Parameters
-        DOE Run Tracking
-        DOE Results
-        DOE Comparison
-      04_Cell_Manufacturing
-        Electrode Manufacturing
-        Cell Assembly
-        Formation & Aging
-        Production Control
-        Process QC & Yield
-        Cell Traceability
-      05_Validation_Testing
-        Test Plan & Matrix
-        Sample Tracking
-        Electrical Tests
-        Mechanical Tests
-        Safety Tests
-        Environmental Tests
-        Test Data & Reports
-      06_Cell_Analysis
-        Electrical Performance
-        Cycle Life Analysis
-        Thermal Analysis
-        Mechanical Analysis
-        Teardown / SEM / EDS
-        Failure Analysis / RCA / CAPA
-      07_Supplier_Cost
-        Supplier Management
-        Supplier Quotation
-        Cell BOM
-        Prototype & SOP Cost
-        Cost Tracking
-      08_Data_Analytics
-        Cycler Raw Data
-        Processed Curve Data
-        Cycler Channel / Cell Mapping
-        Cell Performance Summary
-        Simulation Data
-        DOE Comparison Analytics
-        3D Virtual Operation
-        Dashboard Reports
-      09_Document_Control
-        Engineering Drawings
-        Technical Specifications
-        Standards & Requirements
-        Revision History
-        Approved Documents
   SIB
     [Chưa cấu hình Cell Size]
 ```
 
-Tên hiển thị giữ nguyên. Ký tự `/` trong tên một thư mục được đổi thành ` - ` trên filesystem để không tạo nhầm cấp thư mục. File `.source.json` trong folder là liên kết metadata; file gốc nằm duy nhất trong `data/sources/<SHA-256>`.
+Mỗi cell có cùng 10 module. Tên ngắn ở `data/teams/` là shortcut; file thật nằm ở `data/projects/`.
+
+```text
+40135/
+  00_Project_Management/
+    Project Information & KPI.xlsx
+    Target vs Actual.xlsx
+    Master Timeline.xlsx
+    Rủi ro & Sự vụ.xlsx
+    Execution Control.xlsx
+    Cấu trúc & PIC.xlsx
+    Báo cáo tuần.xlsx
+    Project Status.xlsx
+  01_Cell_Design/
+    Cell Specifications.xlsx
+    DOE Master Plan.xlsx
+    Mechanical Design.xlsx
+  02_Materials/
+    Cathode.xlsx
+    Anode.xlsx
+    Other Materials.xlsx
+  03_DOE/
+    DOE Run Tracking.xlsx
+    DOE Master Plan.xlsx
+    DOE Design Parameters.xlsx
+    DOE Results.xlsx
+    DOE Comparison.xlsx
+  04_Cell_Manufacturing/
+    Electrode Manufacturing.xlsx
+    Cell Assembly.xlsx
+    Formation & Aging.xlsx
+    Production Control.xlsx
+  05_Validation_Testing/
+    Test Categories.xlsx
+  06_Cell_Analysis/
+    Electrical Performance.xlsx
+    Cycle Life Analysis.xlsx
+    Thermal - Mechanical - Failure.xlsx
+  07_Supplier_Cost/
+    Supplier Management.xlsx
+    BOM & Cost.xlsx
+  08_Data_Analytics/
+    Cycler - 3D Cell Digital Twin.xlsx
+    Cycler Data.xlsx
+    Engineering Data & Dashboard.xlsx
+    3D Virtual Operation.xlsx
+  09_Document_Control/
+    Engineering Documents.xlsx
+```
+
+Nội dung chi tiết nằm trong sheet, không tạo thêm thư mục con rỗng. Những folder cũ có dữ liệu được giữ nguyên. Xem [danh mục sheet](WORKBOOKS.md).
