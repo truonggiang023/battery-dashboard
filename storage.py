@@ -1,6 +1,7 @@
 """Local prototype intake: immutable content-addressed files and SQLite metadata."""
 from pathlib import Path
-import sqlite3, hashlib, json, re
+import sqlite3, hashlib, json, re, os
+from team_folders import TEAMS
 from datetime import datetime, timezone
 from domain import CELLS, MODULES
 ROOT=Path(__file__).parent/'data'
@@ -18,6 +19,15 @@ def initialize():
         for module,children in MODULES:
             for child in children:
                 (ROOT/'projects'/c['project']/c['chemistry']/c['size']/module/safe_folder(child)).mkdir(parents=True,exist_ok=True)
+    # Short team folders are relative symlinks, never copies of engineering files.
+    for c in CELLS.values():
+        team_root=ROOT/'teams'/c['project']/c['chemistry']/c['size']
+        team_root.mkdir(parents=True,exist_ok=True)
+        for team in TEAMS:
+            link=team_root/team['folder']
+            target=ROOT/'projects'/c['project']/c['chemistry']/c['size']/MODULES[team['module']][0]
+            if not link.exists() and not link.is_symlink():
+                link.symlink_to(os.path.relpath(target,link.parent),target_is_directory=True)
     with connect() as db:
         db.execute('''CREATE TABLE IF NOT EXISTS documents(id INTEGER PRIMARY KEY, cell TEXT NOT NULL,module INTEGER NOT NULL,folder TEXT NOT NULL,filename TEXT NOT NULL,sha256 TEXT NOT NULL,pic TEXT NOT NULL,revision TEXT NOT NULL,doe_id TEXT,build_lot_id TEXT,cell_id TEXT,created_at TEXT NOT NULL, UNIQUE(cell,module,folder,filename,revision))''')
 

@@ -1,9 +1,11 @@
 from flask import Flask, jsonify, render_template, request, Response, abort
-from domain import MODULES, PROJECTS, CELLS, records
+from domain import MODULES, PROJECTS, CELLS, records, TASK_GROUPS, tasks
 import csv, io, sqlite3
 from pathlib import Path
 from flask import send_file
 import storage
+from catalog import CATALOG, content_rows, source_link
+from team_folders import TEAMS
 storage.initialize()
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024
@@ -14,7 +16,7 @@ def index():
 
 @app.get('/api/hierarchy')
 def hierarchy():
-    return jsonify(projects=PROJECTS, modules=[dict(id=n,children=c) for n,c in MODULES],cells=CELLS,demo=True)
+    return jsonify(projects=PROJECTS, modules=[dict(id=n,children=c) for n,c in MODULES],cells=CELLS,content_sections=CATALOG['sections'],teams=TEAMS,demo=True)
 
 @app.get('/api/cells/<cell_id>/modules/<int:module>')
 def module_data(cell_id,module):
@@ -24,6 +26,18 @@ def module_data(cell_id,module):
     q=request.args.get('q','').lower()
     rows=[r for r in rows if (not status or r['status']==status) and (not q or q in ' '.join(str(v) for v in r.values()).lower())]
     return jsonify(rows=rows,demo=True,cell=CELLS[cell_id])
+
+
+@app.get('/api/cells/<cell_id>/tasks/<group>')
+def task_data(cell_id,group):
+    if cell_id not in CELLS or group not in TASK_GROUPS: abort(404)
+    title,value,description,module=TASK_GROUPS[group]
+    return jsonify(rows=tasks(cell_id,group),title=title,value=value,description=description,module=module,source=source_link(group),demo=True)
+
+@app.get('/api/cells/<cell_id>/content/<int:module>')
+def content_data(cell_id,module):
+    if cell_id not in CELLS or not 0 <= module < len(MODULES): abort(404)
+    return jsonify(rows=content_rows(cell_id,module),demo=True,connected=False)
 
 @app.get('/api/export/<cell_id>/<int:module>')
 def export(cell_id,module):

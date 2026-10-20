@@ -41,6 +41,37 @@ class DashboardTest(unittest.TestCase):
         self.assertEqual(result.status_code,200); self.assertIn('1 | 2',result.json['preview'])
         self.assertEqual(list((storage.ROOT/'sources').iterdir()),[])
         self.assertEqual(self.client.get('/api/cells/unknown/modules/0').status_code,404)
+    def test_overview_task_links_are_scoped_to_selected_cell(self):
+        for group in ('progress','budget','milestones','issues','energy','capacity','cycle','cost'):
+            response=self.client.get(f'/api/cells/CYL-LFP-40135/tasks/{group}')
+            self.assertEqual(response.status_code,200)
+            rows=response.json['rows']; self.assertTrue(rows)
+            self.assertTrue(all(row['id'].startswith('CYL-LFP-40135-') and row['pic'] and row['due'] and row['demo'] for row in rows))
+        other=self.client.get('/api/cells/CYL-SIB-21700/tasks/capacity').json['rows']
+        self.assertTrue(all(row['id'].startswith('CYL-SIB-21700-') for row in other))
+        self.assertEqual(self.client.get('/api/cells/unknown/tasks/energy').status_code,404)
+        self.assertEqual(self.client.get('/api/cells/CYL-LFP-40135/tasks/unknown').status_code,404)
+
+    def test_team_links_and_content_contract(self):
+        from team_folders import TEAMS
+        from catalog import CATALOG
+        for c in CELLS.values():
+            for team in TEAMS:
+                short=storage.ROOT/'teams'/c['project']/c['chemistry']/c['size']/team['folder']
+                target=storage.ROOT/'projects'/c['project']/c['chemistry']/c['size']/MODULES[team['module']][0]
+                self.assertTrue(short.is_symlink())
+                self.assertEqual(short.resolve(),target.resolve())
+        actual=[]
+        for module in range(10):
+            response=self.client.get(f'/api/cells/CYL-LFP-40135/content/{module}')
+            self.assertEqual(response.status_code,200)
+            self.assertFalse(response.json['connected'])
+            actual.extend(response.json['rows'])
+        self.assertEqual(len(actual),len(CATALOG['records']))
+        self.assertTrue(all(r['definition'] and r['status']=='Chưa kết nối' for r in actual))
+        self.assertTrue(any('Σ(Weight × completion)/ΣWeight' in r['calculation'] for r in actual))
+        self.assertEqual(self.client.get('/api/cells/unknown/content/0').status_code,404)
+
     def test_filters(self):
         rows=self.client.get('/api/cells/CYL-LFP-40135/modules/0?status=Approved').json['rows']
         self.assertTrue(rows); self.assertTrue(all(r['status']=='Approved' for r in rows))

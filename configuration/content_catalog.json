@@ -1,0 +1,1239 @@
+{
+  "sections": {
+    "0": [
+      "Project Information & KPI",
+      "Target vs Actual",
+      "Project Status",
+      "Cấu trúc & PIC",
+      "Execution Control",
+      "Master Timeline",
+      "Báo cáo tuần",
+      "Rủi ro & Sự vụ"
+    ],
+    "1": [
+      "Cell Specifications",
+      "DOE Master Plan",
+      "Mechanical Design"
+    ],
+    "2": [
+      "Cathode",
+      "Anode",
+      "Other Materials"
+    ],
+    "3": [
+      "DOE Master Plan",
+      "DOE Design Parameters",
+      "DOE Run Tracking",
+      "DOE Results",
+      "DOE Comparison"
+    ],
+    "4": [
+      "Electrode Manufacturing",
+      "Cell Assembly",
+      "Formation & Aging",
+      "Production Control"
+    ],
+    "5": [
+      "Test Categories"
+    ],
+    "6": [
+      "Electrical Performance",
+      "Cycle Life Analysis",
+      "Thermal / Mechanical / Failure"
+    ],
+    "7": [
+      "Supplier Management",
+      "BOM & Cost"
+    ],
+    "8": [
+      "Cycler Data",
+      "Engineering Data & Dashboard",
+      "3D Virtual Operation"
+    ],
+    "9": [
+      "Engineering Documents"
+    ]
+  },
+  "records": [
+    {
+      "id": "SPEC-001",
+      "module": 0,
+      "section": "Project Information & KPI",
+      "content": "Project Information",
+      "information": "Project name; Cell type; Start date",
+      "source_path": "00_Project_Control/Project_Info.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "PMO"
+    },
+    {
+      "id": "SPEC-002",
+      "module": 0,
+      "section": "Project Information & KPI",
+      "content": "Tiến độ dự án (%)",
+      "information": "Planned / completed weighted milestones\nCell running / Cycler (Link)",
+      "source_path": "00_Project_Control/Master_Timeline.xlsx",
+      "calculation": "Σ(Weight × completion)/ΣWeight; click → Master Timeline",
+      "pic": "PMO"
+    },
+    {
+      "id": "SPEC-003",
+      "module": 0,
+      "section": "Project Information & KPI",
+      "content": "Ngân sách",
+      "information": "Approved budget; spent; committed cost; forecast",
+      "source_path": "00_Project_Control/Budget_Tracker.xlsx; 07_Supplier_Cost/Cost_Tracking.xlsx",
+      "calculation": "Budget remaining = Approved − Actual − Committed; click → Cost Analysis",
+      "pic": "PMO"
+    },
+    {
+      "id": "SPEC-004",
+      "module": 0,
+      "section": "Project Information & KPI",
+      "content": "Milestones hoàn thành",
+      "information": "Completed / total milestone gates",
+      "source_path": "00_Project_Control/Master_Timeline.xlsx",
+      "calculation": "Count Approved/Completed gates / total gates; click → Master Timeline",
+      "pic": "PMO"
+    },
+    {
+      "id": "SPEC-005",
+      "module": 0,
+      "section": "Project Information & KPI",
+      "content": "Issues đang mở",
+      "information": "Open / overdue / critical issues",
+      "source_path": "00_Project_Control/Issue_Risk_Register.xlsx",
+      "calculation": "Count issues status≠Closed; severity governs color; click → Issue Register",
+      "pic": "All teams / PMO"
+    },
+    {
+      "id": "SPEC-006",
+      "module": 0,
+      "section": "Target vs Actual",
+      "content": "Energy density (Wh/kg)",
+      "information": "Target; latest approved energy; cell mass",
+      "source_path": "06_Cell_Analysis/Electrical/Performance_Result.xlsx; 01_Cell_Design/Cell_Specifications.xlsx",
+      "calculation": "Energy density = Discharge energy (Wh) / mass (kg); filter same DOE/test condition; click → Electrical Performance",
+      "pic": "Cell Design / Testing"
+    },
+    {
+      "id": "SPEC-007",
+      "module": 0,
+      "section": "Target vs Actual",
+      "content": "Cell capacity (Ah)",
+      "information": "Target; tested discharge capacity; C-rate; temperature",
+      "source_path": "05_Testing/Electrical/Capacity_Results.xlsx; 01_Cell_Design/Cell_Specifications.xlsx",
+      "calculation": "Actual = approved cell capacity summary at specified C-rate; click → Capacity Results",
+      "pic": "Testing"
+    },
+    {
+      "id": "SPEC-008",
+      "module": 0,
+      "section": "Target vs Actual",
+      "content": "Cycle life predicted",
+      "information": "Target cycles; prediction; retention threshold; model revision",
+      "source_path": "06_Cell_Analysis/Cycling/Cycle_Life_Prediction.xlsx; 05_Testing/Cycler_Raw/",
+      "calculation": "Forecast from fitted validated degradation model to defined retention threshold; flag as prediction; click → Cycling",
+      "pic": "Testing / Data"
+    },
+    {
+      "id": "SPEC-009",
+      "module": 0,
+      "section": "Target vs Actual",
+      "content": "Cell cost — Prototype / SOP",
+      "information": "Target; prototype estimate; SOP forecast; currency",
+      "source_path": "07_Supplier_Cost/Cell_BOM.xlsx; Cost_Tracking.xlsx; Supplier Quotation",
+      "calculation": "Σ(quantity×unit price) + defined process/overhead; separate proto and SOP; click → Cost Analysis",
+      "pic": "PMO"
+    },
+    {
+      "id": "SPEC-010",
+      "module": 0,
+      "section": "Project Status",
+      "content": "Current Phase / Stage Gate",
+      "information": "DOE; Pre-A; A-sample; PP; SOP; gate approval",
+      "source_path": "00_Project_Control/Master_Timeline.xlsx",
+      "calculation": "Latest approved gate / actual stage; click → Milestone Tracking",
+      "pic": "PMO"
+    },
+    {
+      "id": "SPEC-011",
+      "module": 0,
+      "section": "Project Status",
+      "content": "DOE progress",
+      "information": "Runs planned; completed; approved; cancelled",
+      "source_path": "03_DOE/DOE_Master.xlsx",
+      "calculation": "Completed/approved runs ÷ planned valid runs; click → DOE Master",
+      "pic": "Cell Design"
+    },
+    {
+      "id": "SPEC-012",
+      "module": 0,
+      "section": "Project Status",
+      "content": "Milestones tiếp theo",
+      "information": "Next gate; plan date; forecast date; Δdays",
+      "source_path": "00_Project_Control/Master_Timeline.xlsx",
+      "calculation": "Next incomplete gates sorted by forecast; Δdays = Forecast − Baseline; click → Timeline",
+      "pic": "PMO"
+    },
+    {
+      "id": "SPEC-013",
+      "module": 0,
+      "section": "Project Status",
+      "content": "Project warning colors",
+      "information": "Green/Amber/Red/Grey; blocked milestones",
+      "source_path": "Issue Register + Risk Register + Master Timeline",
+      "calculation": "Severity rule: Critical→Red, overdue/high→Amber, normal→Green, no data→Grey; click → filtered issues",
+      "pic": "PMO"
+    },
+    {
+      "id": "SPEC-014",
+      "module": 0,
+      "section": "Cấu trúc & PIC",
+      "content": "Organization Structure",
+      "information": "Department; role; reporting line by 3D virtual",
+      "source_path": "00_Project_Control/Organization.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "PMO"
+    },
+    {
+      "id": "SPEC-015",
+      "module": 0,
+      "section": "Cấu trúc & PIC",
+      "content": "PIC Assignment",
+      "information": "Activity ID; PIC; backup; deadline",
+      "source_path": "00_Project_Control/PIC_Assignment.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "PMO"
+    },
+    {
+      "id": "SPEC-016",
+      "module": 0,
+      "section": "Execution Control",
+      "content": "Task Master List",
+      "information": "Task ID; workstream; priority; owner; planned date; status",
+      "source_path": "00_Project_Control/Action_Tracker.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "PMO"
+    },
+    {
+      "id": "SPEC-017",
+      "module": 0,
+      "section": "Execution Control",
+      "content": "Action Tracking",
+      "information": "Action ID; description; PIC; due date; evidence; closure",
+      "source_path": "00_Project_Control/Action_Tracker.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "PMO"
+    },
+    {
+      "id": "SPEC-018",
+      "module": 0,
+      "section": "Execution Control",
+      "content": "Deliverables",
+      "information": "Deliverable; revision; approver; status; document link",
+      "source_path": "00_Project_Control/Action_Tracker.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "PMO"
+    },
+    {
+      "id": "SPEC-019",
+      "module": 0,
+      "section": "Execution Control",
+      "content": "Pending / Overdue",
+      "information": "Open actions and overdue days",
+      "source_path": "00_Project_Control/Action_Tracker.xlsx",
+      "calculation": "Filter status Open; overdue = Today − Due date",
+      "pic": "PMO"
+    },
+    {
+      "id": "SPEC-020",
+      "module": 0,
+      "section": "Master Timeline",
+      "content": "Project Milestones",
+      "information": "Milestone ID; baseline; forecast; actual; gate",
+      "source_path": "00_Project_Control/Master_Timeline.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "PMO"
+    },
+    {
+      "id": "SPEC-021",
+      "module": 0,
+      "section": "Master Timeline",
+      "content": "Gantt Chart",
+      "information": "Start date; end date; dependencies",
+      "source_path": "00_Project_Control/Master_Timeline.xlsx",
+      "calculation": "Render Gantt from schedule records",
+      "pic": "PMO"
+    },
+    {
+      "id": "SPEC-022",
+      "module": 0,
+      "section": "Master Timeline",
+      "content": "Planned vs Actual",
+      "information": "Baseline date; actual; variation",
+      "source_path": "00_Project_Control/Master_Timeline.xlsx",
+      "calculation": "Δdays = Actual/Forecast − Baseline",
+      "pic": "PMO"
+    },
+    {
+      "id": "SPEC-023",
+      "module": 0,
+      "section": "Master Timeline",
+      "content": "Critical Activities",
+      "information": "Dependency; float; blockages",
+      "source_path": "00_Project_Control/Master_Timeline.xlsx",
+      "calculation": "Critical path from dependencies or PMO critical flag",
+      "pic": "PMO"
+    },
+    {
+      "id": "SPEC-024",
+      "module": 0,
+      "section": "Báo cáo tuần",
+      "content": "Weekly Progress",
+      "information": "Reporting week; task; PIC; status; evidence",
+      "source_path": "00_Project_Control/Weekly_Report.xlsx; Action_Tracker.xlsx",
+      "calculation": "Aggregate by selected reporting week",
+      "pic": "PMO"
+    },
+    {
+      "id": "SPEC-025",
+      "module": 0,
+      "section": "Báo cáo tuần",
+      "content": "Completed Activities",
+      "information": "Reporting week; task; PIC; status; evidence",
+      "source_path": "00_Project_Control/Weekly_Report.xlsx; Action_Tracker.xlsx",
+      "calculation": "Aggregate by selected reporting week",
+      "pic": "PMO"
+    },
+    {
+      "id": "SPEC-026",
+      "module": 0,
+      "section": "Báo cáo tuần",
+      "content": "Next Week Plan",
+      "information": "Reporting week; task; PIC; status; evidence",
+      "source_path": "00_Project_Control/Weekly_Report.xlsx; Action_Tracker.xlsx",
+      "calculation": "Aggregate by selected reporting week",
+      "pic": "PMO"
+    },
+    {
+      "id": "SPEC-027",
+      "module": 0,
+      "section": "Báo cáo tuần",
+      "content": "Open Issues",
+      "information": "Reporting week; task; PIC; status; evidence",
+      "source_path": "00_Project_Control/Weekly_Report.xlsx; Action_Tracker.xlsx",
+      "calculation": "Aggregate by selected reporting week",
+      "pic": "PMO"
+    },
+    {
+      "id": "SPEC-028",
+      "module": 0,
+      "section": "Rủi ro & Sự vụ",
+      "content": "Issue Register",
+      "information": "ID; severity; owner; created; status; actions; evidence",
+      "source_path": "00_Project_Control/Issue_Risk_Register.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "All teams / PMO"
+    },
+    {
+      "id": "SPEC-029",
+      "module": 1,
+      "section": "Cell Specifications",
+      "content": "Cell identity",
+      "information": "Model; chemistry; form factor; revision",
+      "source_path": "01_Cell_Design/Cell_Specifications.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Cell Design"
+    },
+    {
+      "id": "SPEC-030",
+      "module": 1,
+      "section": "Cell Specifications",
+      "content": "Electrical targets",
+      "information": "Nominal voltage; capacity at 0.33C and 1C; DCIR",
+      "source_path": "01_Cell_Design/Cell_Specifications.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Cell Design"
+    },
+    {
+      "id": "SPEC-031",
+      "module": 1,
+      "section": "Cell Specifications",
+      "content": "Energy & power",
+      "information": "Energy density; power density; fast-charge target",
+      "source_path": "01_Cell_Design/Cell_Specifications.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Cell Design"
+    },
+    {
+      "id": "SPEC-032",
+      "module": 1,
+      "section": "Cell Specifications",
+      "content": "Physical envelope",
+      "information": "D × H / L × W × T; mass; max dimensions",
+      "source_path": "01_Cell_Design/Cell_Specifications.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Cell Design"
+    },
+    {
+      "id": "SPEC-033",
+      "module": 1,
+      "section": "Cell Specifications",
+      "content": "Reliability & safety",
+      "information": "Cycle life; storage life; pressure / burst / leak",
+      "source_path": "01_Cell_Design/Cell_Specifications.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Cell Design"
+    },
+    {
+      "id": "SPEC-034",
+      "module": 1,
+      "section": "Cell Specifications",
+      "content": "Cost & compliance",
+      "information": "Prototype/SOP cost target; applicable standards",
+      "source_path": "01_Cell_Design/Cell_Specifications.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Cell Design"
+    },
+    {
+      "id": "SPEC-035",
+      "module": 1,
+      "section": "DOE Master Plan",
+      "content": "Cell balancing",
+      "information": "N/P ratio; cathode/anode areal capacities",
+      "source_path": "01_Cell_Design/Electrochemical_Design.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Cell Design"
+    },
+    {
+      "id": "SPEC-036",
+      "module": 1,
+      "section": "DOE Master Plan",
+      "content": "Electrode dimensions",
+      "information": "Coating width/length; tab area; layers/turns",
+      "source_path": "01_Cell_Design/Electrochemical_Design.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Cell Design"
+    },
+    {
+      "id": "SPEC-037",
+      "module": 1,
+      "section": "DOE Master Plan",
+      "content": "Cathode design",
+      "information": "Loading; active fraction; porosity; thickness",
+      "source_path": "01_Cell_Design/Electrochemical_Design.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Cell Design"
+    },
+    {
+      "id": "SPEC-038",
+      "module": 1,
+      "section": "DOE Master Plan",
+      "content": "Anode design",
+      "information": "Loading; active fraction; porosity; thickness",
+      "source_path": "01_Cell_Design/Electrochemical_Design.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Cell Design"
+    },
+    {
+      "id": "SPEC-039",
+      "module": 1,
+      "section": "DOE Master Plan",
+      "content": "Electrolyte design",
+      "information": "Quantity; electrolyte-to-capacity ratio",
+      "source_path": "01_Cell_Design/Electrochemical_Design.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Cell Design"
+    },
+    {
+      "id": "SPEC-040",
+      "module": 1,
+      "section": "DOE Master Plan",
+      "content": "Design calculations",
+      "information": "Capacity balance; theoretical energy; utilization",
+      "source_path": "01_Cell_Design/Electrochemical_Design.xlsx",
+      "calculation": "Derived from approved geometry/material assumptions",
+      "pic": "Cell Design"
+    },
+    {
+      "id": "SPEC-041",
+      "module": 1,
+      "section": "Mechanical Design",
+      "content": "2D / 3D Drawings",
+      "information": "Document ID; part ID; revision; owner; date; approval, virtual Drawing",
+      "source_path": "01_Cell_Design/Drawings/; Design_Revision.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Cell Design"
+    },
+    {
+      "id": "SPEC-042",
+      "module": 1,
+      "section": "Mechanical Design",
+      "content": "Specifications / GD&T",
+      "information": "Document ID; part ID; revision; owner; date; approval",
+      "source_path": "01_Cell_Design/Drawings/; Design_Revision.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Cell Design"
+    },
+    {
+      "id": "SPEC-043",
+      "module": 2,
+      "section": "Cathode",
+      "content": "Active material / Grade",
+      "information": "Material ID; supplier; composition; spec; lot; status",
+      "source_path": "02_Materials/Cathode/Material_Master.xlsx; COA",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Material"
+    },
+    {
+      "id": "SPEC-044",
+      "module": 2,
+      "section": "Cathode",
+      "content": "Conductive additive",
+      "information": "Material ID; supplier; composition; spec; lot; status",
+      "source_path": "02_Materials/Cathode/Material_Master.xlsx; COA",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Material"
+    },
+    {
+      "id": "SPEC-045",
+      "module": 2,
+      "section": "Cathode",
+      "content": "Binder 1 / Binder 2",
+      "information": "Material ID; supplier; composition; spec; lot; status",
+      "source_path": "02_Materials/Cathode/Material_Master.xlsx; COA",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Material"
+    },
+    {
+      "id": "SPEC-046",
+      "module": 2,
+      "section": "Cathode",
+      "content": "Dispersant / Solvent",
+      "information": "Material ID; supplier; composition; spec; lot; status",
+      "source_path": "02_Materials/Cathode/Material_Master.xlsx; COA",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Material"
+    },
+    {
+      "id": "SPEC-047",
+      "module": 2,
+      "section": "Cathode",
+      "content": "Aluminum foil",
+      "information": "Material ID; supplier; composition; spec; lot; status",
+      "source_path": "02_Materials/Cathode/Material_Master.xlsx; COA",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Material"
+    },
+    {
+      "id": "SPEC-048",
+      "module": 2,
+      "section": "Cathode",
+      "content": "Coating composition / specification",
+      "information": "Material ID; supplier; composition; spec; lot; status",
+      "source_path": "02_Materials/Cathode/Material_Master.xlsx; COA",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Material"
+    },
+    {
+      "id": "SPEC-049",
+      "module": 2,
+      "section": "Anode",
+      "content": "Active material / Grade",
+      "information": "Material ID; supplier; composition; spec; lot; status",
+      "source_path": "02_Materials/Anode/Material_Master.xlsx; COA",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Material"
+    },
+    {
+      "id": "SPEC-050",
+      "module": 2,
+      "section": "Anode",
+      "content": "Conductive additive",
+      "information": "Material ID; supplier; composition; spec; lot; status",
+      "source_path": "02_Materials/Anode/Material_Master.xlsx; COA",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Material"
+    },
+    {
+      "id": "SPEC-051",
+      "module": 2,
+      "section": "Anode",
+      "content": "Binder 1 / Binder 2",
+      "information": "Material ID; supplier; composition; spec; lot; status",
+      "source_path": "02_Materials/Anode/Material_Master.xlsx; COA",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Material"
+    },
+    {
+      "id": "SPEC-052",
+      "module": 2,
+      "section": "Anode",
+      "content": "Dispersant / Solvent",
+      "information": "Material ID; supplier; composition; spec; lot; status",
+      "source_path": "02_Materials/Anode/Material_Master.xlsx; COA",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Material"
+    },
+    {
+      "id": "SPEC-053",
+      "module": 2,
+      "section": "Anode",
+      "content": "Cu / Al foil",
+      "information": "Material ID; supplier; composition; spec; lot; status",
+      "source_path": "02_Materials/Anode/Material_Master.xlsx; COA",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Material"
+    },
+    {
+      "id": "SPEC-054",
+      "module": 2,
+      "section": "Anode",
+      "content": "Coating composition / specification",
+      "information": "Material ID; supplier; composition; spec; lot; status",
+      "source_path": "02_Materials/Anode/Material_Master.xlsx; COA",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Material"
+    },
+    {
+      "id": "SPEC-055",
+      "module": 2,
+      "section": "Other Materials",
+      "content": "Separator",
+      "information": "Material code; supplier; property; verification; lot; approval",
+      "source_path": "02_Materials/{Category}/; Material_BOM.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Materia"
+    },
+    {
+      "id": "SPEC-056",
+      "module": 2,
+      "section": "Other Materials",
+      "content": "Electrolyte",
+      "information": "Material code; supplier; property; verification; lot; approval",
+      "source_path": "02_Materials/{Category}/; Material_BOM.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Material"
+    },
+    {
+      "id": "SPEC-057",
+      "module": 4,
+      "section": "Electrode Manufacturing",
+      "content": "Mixing",
+      "information": "Batch ID; equiPMOent; recipe; parameter; timestamp; yield",
+      "source_path": "04_Manufacturing/Electrode_Process.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Manufacturing"
+    },
+    {
+      "id": "SPEC-058",
+      "module": 4,
+      "section": "Electrode Manufacturing",
+      "content": "Coating",
+      "information": "Batch ID; equiPMOent; recipe; parameter; timestamp; yield",
+      "source_path": "04_Manufacturing/Electrode_Process.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Manufacturing"
+    },
+    {
+      "id": "SPEC-059",
+      "module": 4,
+      "section": "Electrode Manufacturing",
+      "content": "Drying / Calendering",
+      "information": "Batch ID; equiPMOent; recipe; parameter; timestamp; yield",
+      "source_path": "04_Manufacturing/Electrode_Process.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Manufacturing"
+    },
+    {
+      "id": "SPEC-060",
+      "module": 4,
+      "section": "Electrode Manufacturing",
+      "content": "Slitting / Notching",
+      "information": "Batch ID; equiPMOent; recipe; parameter; timestamp; yield",
+      "source_path": "04_Manufacturing/Electrode_Process.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Manufacturing"
+    },
+    {
+      "id": "SPEC-061",
+      "module": 4,
+      "section": "Electrode Manufacturing",
+      "content": "Electrode QC",
+      "information": "Batch ID; equiPMOent; recipe; parameter; timestamp; yield",
+      "source_path": "04_Manufacturing/Electrode_Process.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Manufacturing"
+    },
+    {
+      "id": "SPEC-062",
+      "module": 4,
+      "section": "Cell Assembly",
+      "content": "Notching",
+      "information": "Build lot; equiPMOent; cycle; process parameters; measurements",
+      "source_path": "04_Manufacturing/Assembly_Process.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Manufacturing"
+    },
+    {
+      "id": "SPEC-063",
+      "module": 4,
+      "section": "Cell Assembly",
+      "content": "Winding / Stacking",
+      "information": "Build lot; equiPMOent; cycle; process parameters; measurements",
+      "source_path": "04_Manufacturing/Assembly_Process.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Manufacturing"
+    },
+    {
+      "id": "SPEC-064",
+      "module": 4,
+      "section": "Cell Assembly",
+      "content": "Tab welding / CC welding",
+      "information": "Build lot; equiPMOent; cycle; process parameters; measurements",
+      "source_path": "04_Manufacturing/Assembly_Process.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Manufacturing"
+    },
+    {
+      "id": "SPEC-065",
+      "module": 4,
+      "section": "Cell Assembly",
+      "content": "Can-Cap / Sealing assembly",
+      "information": "Build lot; equiPMOent; cycle; process parameters; measurements",
+      "source_path": "04_Manufacturing/Assembly_Process.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Manufacturing"
+    },
+    {
+      "id": "SPEC-066",
+      "module": 4,
+      "section": "Cell Assembly",
+      "content": "Electrolyte filling",
+      "information": "Build lot; equiPMOent; cycle; process parameters; measurements",
+      "source_path": "04_Manufacturing/Assembly_Process.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Manufacturing"
+    },
+    {
+      "id": "SPEC-067",
+      "module": 4,
+      "section": "Cell Assembly",
+      "content": "Final sealing / Leak check",
+      "information": "Build lot; equiPMOent; cycle; process parameters; measurements",
+      "source_path": "04_Manufacturing/Assembly_Process.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Manufacturing"
+    },
+    {
+      "id": "SPEC-068",
+      "module": 4,
+      "section": "Formation & Aging",
+      "content": "Formation recipe",
+      "information": "Cell ID; formation step; SOC; T; test result",
+      "source_path": "04_Manufacturing/Formation_Aging.xlsx; 05_Testing/Cycler_Raw/",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Manufacturing / Testing"
+    },
+    {
+      "id": "SPEC-069",
+      "module": 4,
+      "section": "Formation & Aging",
+      "content": "Formation curves",
+      "information": "Cell ID; formation step; SOC; T; test result",
+      "source_path": "04_Manufacturing/Formation_Aging.xlsx; 05_Testing/Cycler_Raw/",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Manufacturing / Testing"
+    },
+    {
+      "id": "SPEC-070",
+      "module": 4,
+      "section": "Formation & Aging",
+      "content": "RT / HT Aging",
+      "information": "Cell ID; formation step; SOC; T; test result",
+      "source_path": "04_Manufacturing/Formation_Aging.xlsx; 05_Testing/Cycler_Raw/",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Manufacturing / Testing"
+    },
+    {
+      "id": "SPEC-071",
+      "module": 4,
+      "section": "Formation & Aging",
+      "content": "Grading / OCV / DCIR",
+      "information": "Cell ID; formation step; SOC; T; test result",
+      "source_path": "04_Manufacturing/Formation_Aging.xlsx; 05_Testing/Cycler_Raw/",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Manufacturing / Testing"
+    },
+    {
+      "id": "SPEC-072",
+      "module": 4,
+      "section": "Formation & Aging",
+      "content": "Formation yield",
+      "information": "Cell ID; formation step; SOC; T; test result",
+      "source_path": "04_Manufacturing/Formation_Aging.xlsx; 05_Testing/Cycler_Raw/",
+      "calculation": "Accepted / Total × 100%",
+      "pic": "Manufacturing / Testing"
+    },
+    {
+      "id": "SPEC-073",
+      "module": 4,
+      "section": "Production Control",
+      "content": "Build Tracking",
+      "information": "Lot ID; DOE ID; Cell ID; time; status; owner",
+      "source_path": "04_Manufacturing/Build_Tracking.xlsx; QC_Inspection.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Manufacturing"
+    },
+    {
+      "id": "SPEC-074",
+      "module": 4,
+      "section": "Production Control",
+      "content": "Process Parameter History",
+      "information": "Lot ID; DOE ID; Cell ID; time; status; owner",
+      "source_path": "04_Manufacturing/Build_Tracking.xlsx; QC_Inspection.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Manufacturing"
+    },
+    {
+      "id": "SPEC-075",
+      "module": 4,
+      "section": "Production Control",
+      "content": "Process QC / Defect",
+      "information": "Lot ID; DOE ID; Cell ID; time; status; owner",
+      "source_path": "04_Manufacturing/Build_Tracking.xlsx; QC_Inspection.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Manufacturing"
+    },
+    {
+      "id": "SPEC-076",
+      "module": 4,
+      "section": "Production Control",
+      "content": "Yield and Scrap",
+      "information": "Lot ID; DOE ID; Cell ID; time; status; owner",
+      "source_path": "04_Manufacturing/Build_Tracking.xlsx; QC_Inspection.xlsx",
+      "calculation": "Good cells / built cells × 100%",
+      "pic": "Manufacturing"
+    },
+    {
+      "id": "SPEC-077",
+      "module": 4,
+      "section": "Production Control",
+      "content": "Traceability",
+      "information": "Lot ID; DOE ID; Cell ID; time; status; owner",
+      "source_path": "04_Manufacturing/Build_Tracking.xlsx; QC_Inspection.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Manufacturing"
+    },
+    {
+      "id": "SPEC-078",
+      "module": 6,
+      "section": "Electrical Performance",
+      "content": "Capacity Test",
+      "information": "0.33C / 1C capacity; cycle; temperature",
+      "source_path": "05_Testing/Cycler_Raw/; 06_Cell_Analysis/Electrical/Performance_Result.xlsx",
+      "calculation": "Aggregate approved capacity within specified test condition",
+      "pic": "Testing / Data"
+    },
+    {
+      "id": "SPEC-079",
+      "module": 6,
+      "section": "Electrical Performance",
+      "content": "Energy / Efficiency",
+      "information": "Charge/discharge energy; CE; EE",
+      "source_path": "05_Testing/Cycler_Raw/; 06_Cell_Analysis/Electrical/Performance_Result.xlsx",
+      "calculation": "Energy = ∫V·I dt; EE = Edis/Echg",
+      "pic": "Testing / Data"
+    },
+    {
+      "id": "SPEC-080",
+      "module": 6,
+      "section": "Electrical Performance",
+      "content": "DCIR / Impedance",
+      "information": "Pulse ΔV; ΔI; SOC; temperature",
+      "source_path": "05_Testing/Cycler_Raw/; 06_Cell_Analysis/Electrical/Performance_Result.xlsx",
+      "calculation": "DCIR = |ΔV/ΔI|; consistent pulse window",
+      "pic": "Testing / Data"
+    },
+    {
+      "id": "SPEC-081",
+      "module": 6,
+      "section": "Electrical Performance",
+      "content": "Voltage Curves",
+      "information": "Voltage vs Capacity/Time; Current vs Time",
+      "source_path": "05_Testing/Cycler_Raw/; 06_Cell_Analysis/Electrical/Performance_Result.xlsx",
+      "calculation": "Processed cycler raw data",
+      "pic": "Testing / Data"
+    },
+    {
+      "id": "SPEC-082",
+      "module": 6,
+      "section": "Electrical Performance",
+      "content": "Energy Density",
+      "information": "Discharge Wh; measured cell mass",
+      "source_path": "05_Testing/Cycler_Raw/; 06_Cell_Analysis/Electrical/Performance_Result.xlsx",
+      "calculation": "Wh/kg = Wh ÷ kg",
+      "pic": "Testing / Data"
+    },
+    {
+      "id": "SPEC-083",
+      "module": 6,
+      "section": "Cycle Life Analysis",
+      "content": "Capacity Retention",
+      "information": "Cycle ID; temperature; SOC; Q; E; model version",
+      "source_path": "06_Cell_Analysis/Cycling/; 05_Testing/Cycler_Raw/",
+      "calculation": "Q_n / Q_reference × 100%",
+      "pic": "Testing / Data"
+    },
+    {
+      "id": "SPEC-084",
+      "module": 6,
+      "section": "Cycle Life Analysis",
+      "content": "Coulombic Efficiency",
+      "information": "Cycle ID; temperature; SOC; Q; E; model version",
+      "source_path": "06_Cell_Analysis/Cycling/; 05_Testing/Cycler_Raw/",
+      "calculation": "Q_discharge / Q_charge × 100%",
+      "pic": "Testing / Data"
+    },
+    {
+      "id": "SPEC-085",
+      "module": 6,
+      "section": "Cycle Life Analysis",
+      "content": "Cycle Life Prediction",
+      "information": "Cycle ID; temperature; SOC; Q; E; model version",
+      "source_path": "06_Cell_Analysis/Cycling/; 05_Testing/Cycler_Raw/",
+      "calculation": "Validated extrapolation to defined EOL threshold",
+      "pic": "Testing / Data"
+    },
+    {
+      "id": "SPEC-086",
+      "module": 6,
+      "section": "Cycle Life Analysis",
+      "content": "Degradation / dQdV",
+      "information": "Cycle ID; temperature; SOC; Q; E; model version",
+      "source_path": "06_Cell_Analysis/Cycling/; 05_Testing/Cycler_Raw/",
+      "calculation": "dQ/dV from filtered monotonic charge/discharge curves",
+      "pic": "Testing / Data"
+    },
+    {
+      "id": "SPEC-087",
+      "module": 6,
+      "section": "Thermal / Mechanical / Failure",
+      "content": "Thermal rise / Hotspots",
+      "information": "Cell ID; test/simulation conditions; result; judgment; evidence",
+      "source_path": "06_Cell_Analysis/{Thermal,Mechanical,Teardown,Failure}/",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Relevant Engineering Team"
+    },
+    {
+      "id": "SPEC-088",
+      "module": 6,
+      "section": "Thermal / Mechanical / Failure",
+      "content": "Thermal simulation",
+      "information": "Cell ID; test/simulation conditions; result; judgment; evidence",
+      "source_path": "06_Cell_Analysis/{Thermal,Mechanical,Teardown,Failure}/",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Relevant Engineering Team"
+    },
+    {
+      "id": "SPEC-089",
+      "module": 6,
+      "section": "Thermal / Mechanical / Failure",
+      "content": "Compression / Vibration / Drop",
+      "information": "Cell ID; test/simulation conditions; result; judgment; evidence",
+      "source_path": "06_Cell_Analysis/{Thermal,Mechanical,Teardown,Failure}/",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Relevant Engineering Team"
+    },
+    {
+      "id": "SPEC-090",
+      "module": 6,
+      "section": "Thermal / Mechanical / Failure",
+      "content": "Vent / Burst / Leak",
+      "information": "Cell ID; test/simulation conditions; result; judgment; evidence",
+      "source_path": "06_Cell_Analysis/{Thermal,Mechanical,Teardown,Failure}/",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Relevant Engineering Team"
+    },
+    {
+      "id": "SPEC-091",
+      "module": 6,
+      "section": "Thermal / Mechanical / Failure",
+      "content": "Teardown visual / SEM / EDS",
+      "information": "Cell ID; test/simulation conditions; result; judgment; evidence",
+      "source_path": "06_Cell_Analysis/{Thermal,Mechanical,Teardown,Failure}/",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Relevant Engineering Team"
+    },
+    {
+      "id": "SPEC-092",
+      "module": 6,
+      "section": "Thermal / Mechanical / Failure",
+      "content": "Failure Mode / RCA / CAPA",
+      "information": "Cell ID; test/simulation conditions; result; judgment; evidence",
+      "source_path": "06_Cell_Analysis/{Thermal,Mechanical,Teardown,Failure}/",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Relevant Engineering Team"
+    },
+    {
+      "id": "SPEC-093",
+      "module": 5,
+      "section": "",
+      "content": "Test Plan",
+      "information": "Test ID; sample ID; standard; conditions; owner; schedule",
+      "source_path": "05_Testing/Test_Plan.xlsx; Test_Matrix.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Validation / Testing"
+    },
+    {
+      "id": "SPEC-094",
+      "module": 5,
+      "section": "",
+      "content": "Test Matrix",
+      "information": "Test ID; sample ID; standard; conditions; owner; schedule",
+      "source_path": "05_Testing/Test_Plan.xlsx; Test_Matrix.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Validation / Testing"
+    },
+    {
+      "id": "SPEC-095",
+      "module": 5,
+      "section": "",
+      "content": "Sample Tracking",
+      "information": "Test ID; sample ID; standard; conditions; owner; schedule",
+      "source_path": "05_Testing/Test_Plan.xlsx; Test_Matrix.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Validation / Testing"
+    },
+    {
+      "id": "SPEC-096",
+      "module": 5,
+      "section": "Test Categories",
+      "content": "Electrical Tests",
+      "information": "Test ID; cell ID; test procedure; raw result; status; report link",
+      "source_path": "05_Testing/{Category}/; Test_Results.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Testing"
+    },
+    {
+      "id": "SPEC-097",
+      "module": 5,
+      "section": "Test Categories",
+      "content": "Mechanical Tests",
+      "information": "Test ID; cell ID; test procedure; raw result; status; report link",
+      "source_path": "05_Testing/{Category}/; Test_Results.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Testing"
+    },
+    {
+      "id": "SPEC-098",
+      "module": 5,
+      "section": "Test Categories",
+      "content": "Safety Tests",
+      "information": "Test ID; cell ID; test procedure; raw result; status; report link",
+      "source_path": "05_Testing/{Category}/; Test_Results.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Testing"
+    },
+    {
+      "id": "SPEC-099",
+      "module": 5,
+      "section": "Test Categories",
+      "content": "Environmental Tests",
+      "information": "Test ID; cell ID; test procedure; raw result; status; report link",
+      "source_path": "05_Testing/{Category}/; Test_Results.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Testing"
+    },
+    {
+      "id": "SPEC-100",
+      "module": 5,
+      "section": "Test Categories",
+      "content": "Test Data / Reports",
+      "information": "Test ID; cell ID; test procedure; raw result; status; report link",
+      "source_path": "05_Testing/{Category}/; Test_Results.xlsx",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Testing"
+    },
+    {
+      "id": "SPEC-101",
+      "module": 8,
+      "section": "Cycler Data",
+      "content": "Cycler Raw Data",
+      "information": "File path; device; channel; cell ID; cycle; step; timestamp; validity",
+      "source_path": "05_Testing/Cycler_Raw/; 05_DATA_ANALYTICS/Cycler_Metadata.xlsx",
+      "calculation": "Automatic ingest / parse / validate; never modify raw",
+      "pic": "Testing"
+    },
+    {
+      "id": "SPEC-102",
+      "module": 8,
+      "section": "Cycler Data",
+      "content": "Processed Curve Data",
+      "information": "File path; device; channel; cell ID; cycle; step; timestamp; validity",
+      "source_path": "05_Testing/Cycler_Raw/; 05_DATA_ANALYTICS/Cycler_Metadata.xlsx",
+      "calculation": "Automatic ingest / parse / validate; never modify raw",
+      "pic": "Testing"
+    },
+    {
+      "id": "SPEC-103",
+      "module": 8,
+      "section": "Cycler Data",
+      "content": "Cycler Channel / Cell Mapping",
+      "information": "File path; device; channel; cell ID; cycle; step; timestamp; validity",
+      "source_path": "05_Testing/Cycler_Raw/; 05_DATA_ANALYTICS/Cycler_Metadata.xlsx",
+      "calculation": "Automatic ingest / parse / validate; never modify raw",
+      "pic": "Testing"
+    },
+    {
+      "id": "SPEC-104",
+      "module": 8,
+      "section": "Cycler Data",
+      "content": "Cell Performance Summary",
+      "information": "File path; device; channel; cell ID; cycle; step; timestamp; validity",
+      "source_path": "05_Testing/Cycler_Raw/; 05_DATA_ANALYTICS/Cycler_Metadata.xlsx",
+      "calculation": "Automatic ingest / parse / validate; never modify raw",
+      "pic": "Testing"
+    },
+    {
+      "id": "SPEC-105",
+      "module": 8,
+      "section": "Cycler Data",
+      "content": "Data Quality / Sync Status",
+      "information": "File path; device; channel; cell ID; cycle; step; timestamp; validity",
+      "source_path": "05_Testing/Cycler_Raw/; 05_DATA_ANALYTICS/Cycler_Metadata.xlsx",
+      "calculation": "Last file modified, checksum, parse result, error log",
+      "pic": "Testing"
+    },
+    {
+      "id": "SPEC-106",
+      "module": 8,
+      "section": "Engineering Data & Dashboard",
+      "content": "Simulation Data",
+      "information": "Model/result ID; condition; metrics; version; source link",
+      "source_path": "05_DATA_ANALYTICS/Simulation/; KPI_Index.xlsx; Reports/",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Engineering"
+    },
+    {
+      "id": "SPEC-107",
+      "module": 8,
+      "section": "Engineering Data & Dashboard",
+      "content": "DOE Comparison Analytics",
+      "information": "Model/result ID; condition; metrics; version; source link",
+      "source_path": "05_DATA_ANALYTICS/Simulation/; KPI_Index.xlsx; Reports/",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Engineering"
+    },
+    {
+      "id": "SPEC-108",
+      "module": 9,
+      "section": "Engineering Documents",
+      "content": "Engineering Drawings",
+      "information": "Document ID; revision; owner; status; location",
+      "source_path": "08_Reports/Technical_Documents/",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Engineering"
+    },
+    {
+      "id": "SPEC-109",
+      "module": 9,
+      "section": "Engineering Documents",
+      "content": "Technical Specifications",
+      "information": "Document ID; revision; owner; status; location",
+      "source_path": "08_Reports/Technical_Documents/",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Engineering"
+    },
+    {
+      "id": "SPEC-110",
+      "module": 9,
+      "section": "Engineering Documents",
+      "content": "Standards / Requirements",
+      "information": "Document ID; revision; owner; status; location",
+      "source_path": "08_Reports/Technical_Documents/",
+      "calculation": "Lấy trực tiếp",
+      "pic": "Engineering"
+    },
+    {
+      "id": "SPEC-111",
+      "module": 3,
+      "section": "DOE Master Plan",
+      "content": "DOE Master Plan",
+      "information": "Chưa có định nghĩa trường chi tiết trong bảng yêu cầu.",
+      "source_path": "",
+      "calculation": "",
+      "pic": ""
+    },
+    {
+      "id": "SPEC-112",
+      "module": 3,
+      "section": "DOE Design Parameters",
+      "content": "DOE Design Parameters",
+      "information": "Chưa có định nghĩa trường chi tiết trong bảng yêu cầu.",
+      "source_path": "",
+      "calculation": "",
+      "pic": ""
+    },
+    {
+      "id": "SPEC-113",
+      "module": 3,
+      "section": "DOE Run Tracking",
+      "content": "DOE Run Tracking",
+      "information": "Chưa có định nghĩa trường chi tiết trong bảng yêu cầu.",
+      "source_path": "",
+      "calculation": "",
+      "pic": ""
+    },
+    {
+      "id": "SPEC-114",
+      "module": 3,
+      "section": "DOE Results",
+      "content": "DOE Results",
+      "information": "Chưa có định nghĩa trường chi tiết trong bảng yêu cầu.",
+      "source_path": "",
+      "calculation": "",
+      "pic": ""
+    },
+    {
+      "id": "SPEC-115",
+      "module": 3,
+      "section": "DOE Comparison",
+      "content": "DOE Comparison",
+      "information": "Chưa có định nghĩa trường chi tiết trong bảng yêu cầu.",
+      "source_path": "",
+      "calculation": "",
+      "pic": ""
+    },
+    {
+      "id": "SPEC-116",
+      "module": 7,
+      "section": "Supplier Management",
+      "content": "Supplier Management",
+      "information": "Chưa có định nghĩa trường chi tiết trong bảng yêu cầu.",
+      "source_path": "",
+      "calculation": "",
+      "pic": ""
+    },
+    {
+      "id": "SPEC-117",
+      "module": 7,
+      "section": "BOM & Cost",
+      "content": "BOM & Cost",
+      "information": "Chưa có định nghĩa trường chi tiết trong bảng yêu cầu.",
+      "source_path": "",
+      "calculation": "",
+      "pic": ""
+    },
+    {
+      "id": "SPEC-118",
+      "module": 8,
+      "section": "3D Virtual Operation",
+      "content": "3D Virtual Operation",
+      "information": "Mục 3D Virtual Operation theo bảng yêu cầu. Chưa kết nối model hoặc dữ liệu vận hành.",
+      "source_path": "",
+      "calculation": "",
+      "pic": ""
+    }
+  ]
+}

@@ -1,0 +1,263 @@
+BATTERY R&D DASHBOARD						
+↳ DỰ ÁN (BAO GỒM WARNING AND ISSUE BY COLOR)		↳CONTENT				
+↳ CYLINDRICAL	"↳ LFP
+   40135
+   21700"	↳ QUẢN LÝ DỰ ÁN	↳ Information	↳ DATA SOURCES		PIC
+	"↳ SIB
+   40135
+   21700"	▸ Project Information & KPI				
+	↳ …		↳ Project Information	Project name; Cell type; Start date	"00_Project_Control/Project_Info.xlsx
+Lấy trực tiếp"	PMO
+↳ PRISMATIC	"↳ LFP01
+   52148117
+   ..."		↳ Tiến độ dự án (%)	"Planned / completed weighted milestones
+Cell running / Cycler (Link)"	"00_Project_Control/Master_Timeline.xlsx
+Σ(Weight × completion)/ΣWeight; click → Master Timeline"	PMO
+	↳ SIB		↳ Ngân sách	Approved budget; spent; committed cost; forecast	"00_Project_Control/Budget_Tracker.xlsx; 07_Supplier_Cost/Cost_Tracking.xlsx
+Budget remaining = Approved − Actual − Committed; click → Cost Analysis"	PMO 
+	↳ …		↳ Milestones hoàn thành	Completed / total milestone gates	"00_Project_Control/Master_Timeline.xlsx
+Count Approved/Completed gates / total gates; click → Master Timeline"	PMO
+			↳ Issues đang mở	Open / overdue / critical issues	"00_Project_Control/Issue_Risk_Register.xlsx
+Count issues status≠Closed; severity governs color; click → Issue Register"	All teams / PMO
+		▸ Target vs Actual				
+			↳ Energy density (Wh/kg)	Target; latest approved energy; cell mass	"06_Cell_Analysis/Electrical/Performance_Result.xlsx; 01_Cell_Design/Cell_Specifications.xlsx
+Energy density = Discharge energy (Wh) / mass (kg); filter same DOE/test condition; click → Electrical Performance"	Cell Design / Testing
+			↳ Cell capacity (Ah)	Target; tested discharge capacity; C-rate; temperature	"05_Testing/Electrical/Capacity_Results.xlsx; 01_Cell_Design/Cell_Specifications.xlsx
+Actual = approved cell capacity summary at specified C-rate; click → Capacity Results"	Testing
+			↳ Cycle life predicted	Target cycles; prediction; retention threshold; model revision	"06_Cell_Analysis/Cycling/Cycle_Life_Prediction.xlsx; 05_Testing/Cycler_Raw/
+Forecast from fitted validated degradation model to defined retention threshold; flag as prediction; click → Cycling"	Testing / Data
+			↳ Cell cost — Prototype / SOP	Target; prototype estimate; SOP forecast; currency	"07_Supplier_Cost/Cell_BOM.xlsx; Cost_Tracking.xlsx; Supplier Quotation
+Σ(quantity×unit price) + defined process/overhead; separate proto and SOP; click → Cost Analysis"	PMO
+		▸ Project Status				
+			↳ Current Phase / Stage Gate	DOE; Pre-A; A-sample; PP; SOP; gate approval	"00_Project_Control/Master_Timeline.xlsx
+Latest approved gate / actual stage; click → Milestone Tracking"	PMO
+			↳ DOE progress	Runs planned; completed; approved; cancelled	"03_DOE/DOE_Master.xlsx
+Completed/approved runs ÷ planned valid runs; click → DOE Master"	Cell Design
+			↳ Milestones tiếp theo	Next gate; plan date; forecast date; Δdays	"00_Project_Control/Master_Timeline.xlsx
+Next incomplete gates sorted by forecast; Δdays = Forecast − Baseline; click → Timeline"	PMO
+			↳ Project warning colors	Green/Amber/Red/Grey; blocked milestones	"Issue Register + Risk Register + Master Timeline
+Severity rule: Critical→Red, overdue/high→Amber, normal→Green, no data→Grey; click → filtered issues"	PMO
+		▸ Cấu trúc & PIC				
+			↳ Organization Structure	Department; role; reporting line by 3D virtual	"00_Project_Control/Organization.xlsx
+Lấy trực tiếp"	PMO
+			↳ PIC Assignment	Activity ID; PIC; backup; deadline	"00_Project_Control/PIC_Assignment.xlsx
+Lấy trực tiếp"	PMO
+		▸ Execution Control				
+			↳ Task Master List	Task ID; workstream; priority; owner; planned date; status	"00_Project_Control/Action_Tracker.xlsx
+Lấy trực tiếp"	PMO
+			↳ Action Tracking	Action ID; description; PIC; due date; evidence; closure	"00_Project_Control/Action_Tracker.xlsx
+Lấy trực tiếp"	PMO
+			↳ Deliverables	Deliverable; revision; approver; status; document link	"00_Project_Control/Action_Tracker.xlsx
+Lấy trực tiếp"	PMO
+			↳ Pending / Overdue	Open actions and overdue days	"00_Project_Control/Action_Tracker.xlsx
+Filter status Open; overdue = Today − Due date"	PMO
+		▸ Master Timeline				
+			↳ Project Milestones	Milestone ID; baseline; forecast; actual; gate	"00_Project_Control/Master_Timeline.xlsx
+Lấy trực tiếp"	PMO
+			↳ Gantt Chart	Start date; end date; dependencies	"00_Project_Control/Master_Timeline.xlsx
+Render Gantt from schedule records"	PMO
+			↳ Planned vs Actual	Baseline date; actual; variation	"00_Project_Control/Master_Timeline.xlsx
+Δdays = Actual/Forecast − Baseline"	PMO
+			↳ Critical Activities	Dependency; float; blockages	"00_Project_Control/Master_Timeline.xlsx
+Critical path from dependencies or PMO critical flag"	PMO
+		▸ Báo cáo tuần				
+			↳ Weekly Progress	Reporting week; task; PIC; status; evidence	"00_Project_Control/Weekly_Report.xlsx; Action_Tracker.xlsx
+Aggregate by selected reporting week"	PMO
+			↳ Completed Activities	Reporting week; task; PIC; status; evidence	"00_Project_Control/Weekly_Report.xlsx; Action_Tracker.xlsx
+Aggregate by selected reporting week"	PMO
+			↳ Next Week Plan	Reporting week; task; PIC; status; evidence	"00_Project_Control/Weekly_Report.xlsx; Action_Tracker.xlsx
+Aggregate by selected reporting week"	PMO
+			↳ Open Issues	Reporting week; task; PIC; status; evidence	"00_Project_Control/Weekly_Report.xlsx; Action_Tracker.xlsx
+Aggregate by selected reporting week"	PMO
+		▸ Rủi ro & Sự vụ				
+			↳ Issue Register	ID; severity; owner; created; status; actions; evidence	"00_Project_Control/Issue_Risk_Register.xlsx
+Lấy trực tiếp"	All teams / PMO
+		↳ PHÁT TRIỂN CELL				
+		↳ Thiết kế Cell				
+			▸ Cell Specifications			
+			↳ Cell identity	Model; chemistry; form factor; revision	"01_Cell_Design/Cell_Specifications.xlsx
+Lấy trực tiếp"	Cell Design
+			↳ Electrical targets	Nominal voltage; capacity at 0.33C and 1C; DCIR	"01_Cell_Design/Cell_Specifications.xlsx
+Lấy trực tiếp"	Cell Design
+			↳ Energy & power	Energy density; power density; fast-charge target	"01_Cell_Design/Cell_Specifications.xlsx
+Lấy trực tiếp"	Cell Design
+			↳ Physical envelope	D × H / L × W × T; mass; max dimensions	"01_Cell_Design/Cell_Specifications.xlsx
+Lấy trực tiếp"	Cell Design
+			↳ Reliability & safety	Cycle life; storage life; pressure / burst / leak	"01_Cell_Design/Cell_Specifications.xlsx
+Lấy trực tiếp"	Cell Design
+			↳ Cost & compliance	Prototype/SOP cost target; applicable standards	"01_Cell_Design/Cell_Specifications.xlsx
+Lấy trực tiếp"	Cell Design
+			▸ DOE Master Plan			
+			↳ Cell balancing	N/P ratio; cathode/anode areal capacities	"01_Cell_Design/Electrochemical_Design.xlsx
+Lấy trực tiếp"	Cell Design
+			↳ Electrode dimensions	Coating width/length; tab area; layers/turns	"01_Cell_Design/Electrochemical_Design.xlsx
+Lấy trực tiếp"	Cell Design
+			↳ Cathode design	Loading; active fraction; porosity; thickness	"01_Cell_Design/Electrochemical_Design.xlsx
+Lấy trực tiếp"	Cell Design
+			↳ Anode design	Loading; active fraction; porosity; thickness	"01_Cell_Design/Electrochemical_Design.xlsx
+Lấy trực tiếp"	Cell Design
+			↳ Electrolyte design	Quantity; electrolyte-to-capacity ratio	"01_Cell_Design/Electrochemical_Design.xlsx
+Lấy trực tiếp"	Cell Design
+			↳ Design calculations	Capacity balance; theoretical energy; utilization	"01_Cell_Design/Electrochemical_Design.xlsx
+Derived from approved geometry/material assumptions"	Cell Design
+			▸ Mechanical Design			
+			↳ 2D / 3D Drawings	Document ID; part ID; revision; owner; date; approval, virtual Drawing	"01_Cell_Design/Drawings/; Design_Revision.xlsx
+Lấy trực tiếp"	Cell Design
+			↳ Specifications / GD&T	Document ID; part ID; revision; owner; date; approval	"01_Cell_Design/Drawings/; Design_Revision.xlsx
+Lấy trực tiếp"	Cell Design
+		↳ Nguyên vật liệu				
+			▸ Cathode			
+			↳ Active material / Grade	Material ID; supplier; composition; spec; lot; status	"02_Materials/Cathode/Material_Master.xlsx; COA
+Lấy trực tiếp"	Material
+			↳ Conductive additive	Material ID; supplier; composition; spec; lot; status	"02_Materials/Cathode/Material_Master.xlsx; COA
+Lấy trực tiếp"	Material 
+			↳ Binder 1 / Binder 2	Material ID; supplier; composition; spec; lot; status	"02_Materials/Cathode/Material_Master.xlsx; COA
+Lấy trực tiếp"	Material
+			↳ Dispersant / Solvent	Material ID; supplier; composition; spec; lot; status	"02_Materials/Cathode/Material_Master.xlsx; COA
+Lấy trực tiếp"	Material 
+			↳ Aluminum foil	Material ID; supplier; composition; spec; lot; status	"02_Materials/Cathode/Material_Master.xlsx; COA
+Lấy trực tiếp"	Material 
+			↳ Coating composition / specification	Material ID; supplier; composition; spec; lot; status	"02_Materials/Cathode/Material_Master.xlsx; COA
+Lấy trực tiếp"	Material 
+			▸ Anode			
+			↳ Active material / Grade	Material ID; supplier; composition; spec; lot; status	"02_Materials/Anode/Material_Master.xlsx; COA
+Lấy trực tiếp"	Material 
+			↳ Conductive additive	Material ID; supplier; composition; spec; lot; status	"02_Materials/Anode/Material_Master.xlsx; COA
+Lấy trực tiếp"	Material
+			↳ Binder 1 / Binder 2	Material ID; supplier; composition; spec; lot; status	"02_Materials/Anode/Material_Master.xlsx; COA
+Lấy trực tiếp"	Material 
+			↳ Dispersant / Solvent	Material ID; supplier; composition; spec; lot; status	"02_Materials/Anode/Material_Master.xlsx; COA
+Lấy trực tiếp"	Material 
+			↳ Cu / Al foil	Material ID; supplier; composition; spec; lot; status	"02_Materials/Anode/Material_Master.xlsx; COA
+Lấy trực tiếp"	Material 
+			↳ Coating composition / specification	Material ID; supplier; composition; spec; lot; status	"02_Materials/Anode/Material_Master.xlsx; COA
+Lấy trực tiếp"	Material 
+			▸ Other Materials			
+			↳ Separator	Material code; supplier; property; verification; lot; approval	"02_Materials/{Category}/; Material_BOM.xlsx
+Lấy trực tiếp"	Materia
+			↳ Electrolyte	Material code; supplier; property; verification; lot; approval	"02_Materials/{Category}/; Material_BOM.xlsx
+Lấy trực tiếp"	Material 
+		↳ Sản xuất Cell				
+			▸ Electrode Manufacturing			
+			↳ Mixing	Batch ID; equiPMOent; recipe; parameter; timestamp; yield	"04_Manufacturing/Electrode_Process.xlsx
+Lấy trực tiếp"	Manufacturing
+			↳ Coating	Batch ID; equiPMOent; recipe; parameter; timestamp; yield	"04_Manufacturing/Electrode_Process.xlsx
+Lấy trực tiếp"	Manufacturing
+			↳ Drying / Calendering	Batch ID; equiPMOent; recipe; parameter; timestamp; yield	"04_Manufacturing/Electrode_Process.xlsx
+Lấy trực tiếp"	Manufacturing
+			↳ Slitting / Notching	Batch ID; equiPMOent; recipe; parameter; timestamp; yield	"04_Manufacturing/Electrode_Process.xlsx
+Lấy trực tiếp"	Manufacturing
+			↳ Electrode QC	Batch ID; equiPMOent; recipe; parameter; timestamp; yield	"04_Manufacturing/Electrode_Process.xlsx
+Lấy trực tiếp"	Manufacturing
+			▸ Cell Assembly			
+			↳ Notching	Build lot; equiPMOent; cycle; process parameters; measurements	"04_Manufacturing/Assembly_Process.xlsx
+Lấy trực tiếp"	Manufacturing
+			↳ Winding / Stacking	Build lot; equiPMOent; cycle; process parameters; measurements	"04_Manufacturing/Assembly_Process.xlsx
+Lấy trực tiếp"	Manufacturing
+			↳ Tab welding / CC welding	Build lot; equiPMOent; cycle; process parameters; measurements	"04_Manufacturing/Assembly_Process.xlsx
+Lấy trực tiếp"	Manufacturing
+			↳ Can-Cap / Sealing assembly	Build lot; equiPMOent; cycle; process parameters; measurements	"04_Manufacturing/Assembly_Process.xlsx
+Lấy trực tiếp"	Manufacturing
+			↳ Electrolyte filling	Build lot; equiPMOent; cycle; process parameters; measurements	"04_Manufacturing/Assembly_Process.xlsx
+Lấy trực tiếp"	Manufacturing
+			↳ Final sealing / Leak check	Build lot; equiPMOent; cycle; process parameters; measurements	"04_Manufacturing/Assembly_Process.xlsx
+Lấy trực tiếp"	Manufacturing
+			▸ Formation & Aging			
+			↳ Formation recipe	Cell ID; formation step; SOC; T; test result	"04_Manufacturing/Formation_Aging.xlsx; 05_Testing/Cycler_Raw/
+Lấy trực tiếp"	Manufacturing / Testing
+			↳ Formation curves	Cell ID; formation step; SOC; T; test result	"04_Manufacturing/Formation_Aging.xlsx; 05_Testing/Cycler_Raw/
+Lấy trực tiếp"	Manufacturing / Testing
+			↳ RT / HT Aging	Cell ID; formation step; SOC; T; test result	"04_Manufacturing/Formation_Aging.xlsx; 05_Testing/Cycler_Raw/
+Lấy trực tiếp"	Manufacturing / Testing
+			↳ Grading / OCV / DCIR	Cell ID; formation step; SOC; T; test result	"04_Manufacturing/Formation_Aging.xlsx; 05_Testing/Cycler_Raw/
+Lấy trực tiếp"	Manufacturing / Testing
+			↳ Formation yield	Cell ID; formation step; SOC; T; test result	"04_Manufacturing/Formation_Aging.xlsx; 05_Testing/Cycler_Raw/
+Accepted / Total × 100%"	Manufacturing / Testing
+			▸ Production Control			
+			↳ Build Tracking	Lot ID; DOE ID; Cell ID; time; status; owner	"04_Manufacturing/Build_Tracking.xlsx; QC_Inspection.xlsx
+Lấy trực tiếp"	Manufacturing
+			↳ Process Parameter History	Lot ID; DOE ID; Cell ID; time; status; owner	"04_Manufacturing/Build_Tracking.xlsx; QC_Inspection.xlsx
+Lấy trực tiếp"	Manufacturing
+			↳ Process QC / Defect	Lot ID; DOE ID; Cell ID; time; status; owner	"04_Manufacturing/Build_Tracking.xlsx; QC_Inspection.xlsx
+Lấy trực tiếp"	Manufacturing
+			↳ Yield and Scrap	Lot ID; DOE ID; Cell ID; time; status; owner	"04_Manufacturing/Build_Tracking.xlsx; QC_Inspection.xlsx
+Good cells / built cells × 100%"	Manufacturing
+			↳ Traceability	Lot ID; DOE ID; Cell ID; time; status; owner	"04_Manufacturing/Build_Tracking.xlsx; QC_Inspection.xlsx
+Lấy trực tiếp"	Manufacturing
+			↳ Phân tích Cell			
+			▸ Electrical Performance			
+			↳ Capacity Test	0.33C / 1C capacity; cycle; temperature	"05_Testing/Cycler_Raw/; 06_Cell_Analysis/Electrical/Performance_Result.xlsx
+Aggregate approved capacity within specified test condition"	Testing / Data
+			↳ Energy / Efficiency	Charge/discharge energy; CE; EE	"05_Testing/Cycler_Raw/; 06_Cell_Analysis/Electrical/Performance_Result.xlsx
+Energy = ∫V·I dt; EE = Edis/Echg"	Testing / Data
+			↳ DCIR / Impedance	Pulse ΔV; ΔI; SOC; temperature	"05_Testing/Cycler_Raw/; 06_Cell_Analysis/Electrical/Performance_Result.xlsx
+DCIR = |ΔV/ΔI|; consistent pulse window"	Testing / Data
+			↳ Voltage Curves	Voltage vs Capacity/Time; Current vs Time	"05_Testing/Cycler_Raw/; 06_Cell_Analysis/Electrical/Performance_Result.xlsx
+Processed cycler raw data"	Testing / Data
+			↳ Energy Density	Discharge Wh; measured cell mass	"05_Testing/Cycler_Raw/; 06_Cell_Analysis/Electrical/Performance_Result.xlsx
+Wh/kg = Wh ÷ kg"	Testing / Data
+			▸ Cycle Life Analysis			
+			↳ Capacity Retention	Cycle ID; temperature; SOC; Q; E; model version	"06_Cell_Analysis/Cycling/; 05_Testing/Cycler_Raw/
+Q_n / Q_reference × 100%"	Testing / Data
+			↳ Coulombic Efficiency	Cycle ID; temperature; SOC; Q; E; model version	"06_Cell_Analysis/Cycling/; 05_Testing/Cycler_Raw/
+Q_discharge / Q_charge × 100%"	Testing / Data
+			↳ Cycle Life Prediction	Cycle ID; temperature; SOC; Q; E; model version	"06_Cell_Analysis/Cycling/; 05_Testing/Cycler_Raw/
+Validated extrapolation to defined EOL threshold"	Testing / Data
+			↳ Degradation / dQdV	Cycle ID; temperature; SOC; Q; E; model version	"06_Cell_Analysis/Cycling/; 05_Testing/Cycler_Raw/
+dQ/dV from filtered monotonic charge/discharge curves"	Testing / Data
+			▸ Thermal / Mechanical / Failure			
+			↳ Thermal rise / Hotspots	Cell ID; test/simulation conditions; result; judgment; evidence	"06_Cell_Analysis/{Thermal,Mechanical,Teardown,Failure}/
+Lấy trực tiếp"	Relevant Engineering Team
+			↳ Thermal simulation	Cell ID; test/simulation conditions; result; judgment; evidence	"06_Cell_Analysis/{Thermal,Mechanical,Teardown,Failure}/
+Lấy trực tiếp"	Relevant Engineering Team
+			↳ Compression / Vibration / Drop	Cell ID; test/simulation conditions; result; judgment; evidence	"06_Cell_Analysis/{Thermal,Mechanical,Teardown,Failure}/
+Lấy trực tiếp"	Relevant Engineering Team
+			↳ Vent / Burst / Leak	Cell ID; test/simulation conditions; result; judgment; evidence	"06_Cell_Analysis/{Thermal,Mechanical,Teardown,Failure}/
+Lấy trực tiếp"	Relevant Engineering Team
+			↳ Teardown visual / SEM / EDS	Cell ID; test/simulation conditions; result; judgment; evidence	"06_Cell_Analysis/{Thermal,Mechanical,Teardown,Failure}/
+Lấy trực tiếp"	Relevant Engineering Team
+			↳ Failure Mode / RCA / CAPA	Cell ID; test/simulation conditions; result; judgment; evidence	"06_Cell_Analysis/{Thermal,Mechanical,Teardown,Failure}/
+Lấy trực tiếp"	Relevant Engineering Team
+		↳ VALIDATION & TESTING				
+			↳ Test Plan	Test ID; sample ID; standard; conditions; owner; schedule	"05_Testing/Test_Plan.xlsx; Test_Matrix.xlsx
+Lấy trực tiếp"	Validation / Testing
+			↳ Test Matrix	Test ID; sample ID; standard; conditions; owner; schedule	"05_Testing/Test_Plan.xlsx; Test_Matrix.xlsx
+Lấy trực tiếp"	Validation / Testing
+			↳ Sample Tracking	Test ID; sample ID; standard; conditions; owner; schedule	"05_Testing/Test_Plan.xlsx; Test_Matrix.xlsx
+Lấy trực tiếp"	Validation / Testing
+			▸ Test Categories			
+			↳ Electrical Tests	Test ID; cell ID; test procedure; raw result; status; report link	"05_Testing/{Category}/; Test_Results.xlsx
+Lấy trực tiếp"	Testing
+			↳ Mechanical Tests	Test ID; cell ID; test procedure; raw result; status; report link	"05_Testing/{Category}/; Test_Results.xlsx
+Lấy trực tiếp"	Testing
+			↳ Safety Tests	Test ID; cell ID; test procedure; raw result; status; report link	"05_Testing/{Category}/; Test_Results.xlsx
+Lấy trực tiếp"	Testing
+			↳ Environmental Tests	Test ID; cell ID; test procedure; raw result; status; report link	"05_Testing/{Category}/; Test_Results.xlsx
+Lấy trực tiếp"	Testing
+			↳ Test Data / Reports	Test ID; cell ID; test procedure; raw result; status; report link	"05_Testing/{Category}/; Test_Results.xlsx
+Lấy trực tiếp"	Testing
+		↳ SUPPLIER & COST	▸ Supplier Management			
+			▸ BOM & Cost			
+		↳ DATA & ANALYTICS	↳ Cycler Data	 3D Virtual Operation		
+			↳ Cycler Raw Data	File path; device; channel; cell ID; cycle; step; timestamp; validity	"05_Testing/Cycler_Raw/; 05_DATA_ANALYTICS/Cycler_Metadata.xlsx
+Automatic ingest / parse / validate; never modify raw"	Testing
+			↳ Processed Curve Data	File path; device; channel; cell ID; cycle; step; timestamp; validity	"05_Testing/Cycler_Raw/; 05_DATA_ANALYTICS/Cycler_Metadata.xlsx
+Automatic ingest / parse / validate; never modify raw"	Testing
+			↳ Cycler Channel / Cell Mapping	File path; device; channel; cell ID; cycle; step; timestamp; validity	"05_Testing/Cycler_Raw/; 05_DATA_ANALYTICS/Cycler_Metadata.xlsx
+Automatic ingest / parse / validate; never modify raw"	Testing
+			↳ Cell Performance Summary	File path; device; channel; cell ID; cycle; step; timestamp; validity	"05_Testing/Cycler_Raw/; 05_DATA_ANALYTICS/Cycler_Metadata.xlsx
+Automatic ingest / parse / validate; never modify raw"	Testing 
+			↳ Data Quality / Sync Status	File path; device; channel; cell ID; cycle; step; timestamp; validity	"05_Testing/Cycler_Raw/; 05_DATA_ANALYTICS/Cycler_Metadata.xlsx
+Last file modified, checksum, parse result, error log"	Testing 
+			▸ Engineering Data & Dashboard			
+			↳ Simulation Data	Model/result ID; condition; metrics; version; source link	"05_DATA_ANALYTICS/Simulation/; KPI_Index.xlsx; Reports/
+Lấy trực tiếp"	Engineering
+			↳ DOE Comparison Analytics	Model/result ID; condition; metrics; version; source link	"05_DATA_ANALYTICS/Simulation/; KPI_Index.xlsx; Reports/
+Lấy trực tiếp"	Engineering
+		↳ DOCUMENT CONTROL	↳ Engineering Documents			
+			↳ Engineering Drawings	Document ID; revision; owner; status; location	"08_Reports/Technical_Documents/
+Lấy trực tiếp"	Engineering
+			↳ Technical Specifications	Document ID; revision; owner; status; location	"08_Reports/Technical_Documents/
+Lấy trực tiếp"	Engineering
+			↳ Standards / Requirements	Document ID; revision; owner; status; location	"08_Reports/Technical_Documents/
+Lấy trực tiếp"	Engineering
