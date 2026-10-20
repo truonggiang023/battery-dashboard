@@ -22,7 +22,7 @@ Saving requires a SHA-256 revision. A cell-wide `flock` serializes application w
 
 `app.py` exposes scoped workbook/sheet APIs, summary/task queries, XLSX downloads and a complete per-cell workbook ZIP. Dataset and workbook paths are allowlisted. Changes require JSON with a custom same-origin request header; no cross-origin CORS access is enabled. Optional environment credentials protect all routes with HTTP Basic; use HTTPS termination for shared hosting.
 
-`static/app.js` preserves the nine flat sidebar items. Context/team selectors are in the content area. File and sheet selectors replace the old nested folder tree. The editor writes server files, supports tabular paste and displays conflicts without discarding inputs. The dashboard polls files every 30 seconds; if a file is invalid, it shows an explicit error/stale-data notice instead of treating old values as current. Downloads are copies and are not a synchronization agent.
+`static/app.js` uses flat sidebar groups including Cell Design, Materials, DOE, Manufacturing and Cell Analysis. Context/team selectors are in the content area. File and sheet selectors replace the old nested folder tree. The editor writes server files, supports tabular paste and displays conflicts without discarding inputs. The dashboard polls files every 30 seconds; if a file is invalid, it shows an explicit error/stale-data notice instead of treating old values as current. Downloads are copies and are not a synchronization agent.
 
 ## Original Cycler / Digital Twin
 

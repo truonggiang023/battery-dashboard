@@ -14,6 +14,10 @@ Dùng Waitress, một process với 8 thread. `--local` chỉ bind loopback và 
 
 Ứng dụng tự tạo các workbook trống cho 5 cell thật và một **dự án ví dụ riêng**. Khởi động lại không ghi đè file đã tồn tại. Giao diện mặc định mở dự án `[VÍ DỤ] DEMO-LFP-01`; chọn `[THỰC]` để nhập dữ liệu vận hành của cell.
 
+## Menu trái
+
+Nhóm **Phát triển cell** có Thiết kế Cell, Nguyên vật liệu, DOE & Thử nghiệm, Công thức DOE, Sản xuất Cell và Phân tích Cell. Mỗi mục mở đúng module/file/sheet của cell đang chọn; nội dung chi tiết nằm trong vùng chính, không dùng cây thư mục ở sidebar.
+
 ## Cách team cập nhật
 
 1. Chọn **Dự án → Chemistry → Cell Size** bằng đường dẫn dưới tiêu đề.
