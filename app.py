@@ -5,6 +5,7 @@ import storage
 import workbook_store as store
 import example_project
 import live_data
+import book_views
 from domain import CELLS, MODULES, PROJECTS
 from team_folders import TEAMS
 
@@ -52,7 +53,7 @@ def index():return render_template('index.html')
 
 @app.get('/api/hierarchy')
 def hierarchy():
-    return jsonify(projects=PROJECTS,cells=CELLS,teams=TEAMS,modules=[dict(id=n,children=c) for n,c in MODULES],workbooks=[dict(id=key,filename=s['filename'],module=s['module'],section=s['section'],sheets=list(s['sheets'])) for key,s in store.SCHEMAS.items()],example_cell=example_project.EXAMPLE_CELL)
+    return jsonify(projects=PROJECTS,cells=CELLS,teams=TEAMS,modules=[dict(id=n,children=c) for n,c in MODULES],workbooks=[dict(id=key,filename=s['filename'],module=s['module'],section=s['section'],sheets=list(s['sheets']),labels=s.get('labels',{}),read_only=s.get('read_only',[])) for key,s in store.SCHEMAS.items()],function_tree=store.FUNCTION_TREE,example_cell=example_project.EXAMPLE_CELL)
 
 @app.get('/api/programs')
 def programs():
@@ -69,20 +70,28 @@ def programs():
     return jsonify(programs=result)
 
 @app.get('/api/cells/<cell>/summary')
-def summary(cell):valid(cell);return jsonify(live_data.snapshot(cell))
+def summary(cell):
+    valid(cell)
+    with store.lock(cell):
+        book_views.refresh(cell)
+        return jsonify(live_data.snapshot(cell))
 
 @app.get('/api/cells/<cell>/tasks/<group>')
 def task_data(cell,group):
     valid(cell)
     if group not in ('progress','budget','milestones','issues','energy','capacity','cycle','cost','cost_prototype','cost_sop'):abort(404)
-    return jsonify(live_data.task_rows(cell,group))
+    with store.lock(cell):
+        book_views.refresh(cell)
+        return jsonify(live_data.task_rows(cell,group))
 
 @app.get('/api/cells/<cell>/workbooks/<book>')
 def workbook(cell,book):
     valid(cell)
     if book not in store.SCHEMAS:abort(404)
-    data=store.read(cell,book)
-    data.update(filename=store.SCHEMAS[book]['filename'],fields={name:[dict(name=key,type=kind,required=required,choices=choices) for key,(kind,required,choices) in fields.items()] for name,fields in store.SCHEMAS[book]['sheets'].items()})
+    with store.lock(cell):
+        if store.SCHEMAS[book].get('read_only'):book_views.refresh(cell)
+        data=store.read(cell,book)
+    data.update(read_only=store.SCHEMAS[book].get('read_only',[]),labels=store.SCHEMAS[book].get('labels',{}),edit_targets=store.SCHEMAS[book].get('edit_targets',{}),filename=store.SCHEMAS[book]['filename'],fields={name:[dict(name=key,type=kind,required=required,choices=choices) for key,(kind,required,choices) in fields.items()] for name,fields in store.SCHEMAS[book]['sheets'].items()})
     return jsonify(data)
 
 @app.put('/api/cells/<cell>/workbooks/<book>/sheets/<sheet>')
@@ -91,7 +100,13 @@ def save_sheet(cell,book,sheet):
     if book not in store.SCHEMAS or sheet not in store.SCHEMAS[book]['sheets']:abort(404)
     body=request.get_json(silent=True)
     if not isinstance(body,dict):return jsonify(error='Nội dung phải là JSON.'),400
-    result=store.save_sheet(cell,book,sheet,body.get('rows'),body.get('revision'),request.authorization.username if request.authorization else 'local')
+    with store.lock(cell):
+        if sheet in store.SCHEMAS[book].get('read_only',[]):raise store.DataError('Sheet tổng hợp chỉ đọc. Cập nhật nội dung gốc để tự tính lại.')
+        if store.SCHEMAS[book].get('read_only'):book_views.refresh(cell)
+        result=store.save_sheet(cell,book,sheet,body.get('rows'),body.get('revision'),request.authorization.username if request.authorization else 'local')
+        if book in ('project','timeline','issues','execution','targets','doe_runs','performance') or store.SCHEMAS[book].get('read_only'):
+            book_views.refresh(cell)
+            result=store.read(cell,book)
     return jsonify(revision=result['revision'],rows=result['sheets'][sheet],modified_at=result['modified_at'])
 
 @app.get('/api/cells/<cell>/workbooks/<book>/download')
@@ -99,7 +114,9 @@ def download(cell,book):
     valid(cell)
     if book not in store.SCHEMAS:abort(404)
     # Validation prevents downloading malformed/partly-written files unnoticed.
-    store.read(cell,book)
+    with store.lock(cell):
+        if store.SCHEMAS[book].get('read_only'):book_views.refresh(cell)
+        store.read(cell,book)
     prefix='EXAMPLE - ' if store.DATASET.get()=='example' else ''
     return send_file(store.path_for(cell,book),as_attachment=True,download_name=prefix+store.SCHEMAS[book]['filename'],mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 
@@ -128,6 +145,7 @@ def excel_package(cell):
     import io, zipfile
     output=io.BytesIO()
     with store.lock(cell):
+        book_views.refresh(cell)
         with zipfile.ZipFile(output,'w',zipfile.ZIP_DEFLATED) as archive:
             for key,schema in store.SCHEMAS.items():
                 store.read(cell,key)

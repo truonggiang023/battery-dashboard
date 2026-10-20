@@ -115,6 +115,53 @@ class DashboardTest(unittest.TestCase):
         wb=load_workbook(path);wb.create_sheet('Team Notes')['A1']='Preserve me';wb.save(path);wb.close();before=path.read_bytes()
         response=self.client.get(f'/api/cells/{EXAMPLE}/workbooks/project?dataset=example')
         self.assertEqual(response.status_code,422);self.assertEqual(path.read_bytes(),before)
+    def test_requested_function_tree_maps_all_content_to_excel_sheets(self):
+        tree=self.client.get('/api/hierarchy').json['function_tree']
+        functions=[f for group in tree for f in group['functions']]
+        self.assertEqual(len(functions),30)
+        self.assertEqual(sum(len(f['children']) for f in functions),110)
+        validation=next(g for g in tree if g['label']=='VALIDATION & TESTING')
+        self.assertEqual([f['label'] for f in validation['functions']],['Test Plan','Test Matrix','Sample Tracking','Test Categories'])
+        store.DATASET.set('live')
+        for function in functions:
+            physical=store.read(CELL,function['book'])
+            for child in function['children']:
+                self.assertIn(child['sheet'],physical['sheets'])
+                self.assertLessEqual(len(child['sheet']),31)
+        project=next(f for f in functions if f['label']=='Project Information & KPI')
+        self.assertEqual([c['label'] for c in project['children']],['Project Information','Tiến độ dự án (%)','Ngân sách','Milestones hoàn thành','Issues đang mở'])
+    def test_summary_sheets_recalculate_and_reject_direct_editing(self):
+        project=self.book('project')
+        self.assertEqual(project['sheets']['Tiến độ dự án (%)'][0]['information'],'68%')
+        self.assertIn('Tiến độ dự án (%)',project['read_only'])
+        response=self.save('project','Tiến độ dự án (%)',[dict(record_id='FAKE',content='Progress',information='100%')],project['revision'])
+        self.assertEqual(response.status_code,422)
+        timeline=self.book('timeline');rows=timeline['sheets']['Project Milestones'];rows[2]['completion']=100
+        self.assertEqual(self.save('timeline','Project Milestones',rows,timeline['revision']).status_code,200)
+        project=self.book('project')
+        self.assertEqual(project['sheets']['Tiến độ dự án (%)'][0]['information'],'70%')
+        with store.scope('example'):
+            self.assertEqual(store.read(EXAMPLE,'project')['sheets']['Tiến độ dự án (%)'][0]['information'],'70%')
+        costs=self.book()['sheets']['Cell cost - Prototype - SOP']
+        self.assertEqual(len(costs),2);self.assertIn('Prototype',costs[0]['content']);self.assertIn('SOP',costs[1]['content'])
+        performance=self.book('performance')
+        self.assertIn('EE: 96.6286%',performance['sheets']['Energy - Efficiency'][0]['information'])
+    def test_additive_sheet_upgrade_preserves_input_and_is_repeatable(self):
+        from openpyxl.styles import Font
+        store.DATASET.set('live');path=store.path_for(CELL,'project')
+        wb=load_workbook(path)
+        for name in store.SCHEMAS['project']['read_only']:wb.remove(wb[name])
+        ws=wb['Project Information'];ws.append(['KEEP-01','Keep this project',None,None,None,'Original owner','VND'])
+        ws['F2'].font=Font(italic=True,color='FF005588');wb.save(path);wb.close();old=path.read_bytes()
+        store.initialize(cells=[CELL])
+        current=store.read(CELL,'project')
+        self.assertEqual(current['sheets']['Project Information'][0]['owner'],'Original owner')
+        with path.open('rb') as handle:
+            upgraded=load_workbook(handle);self.assertTrue(upgraded['Project Information']['F2'].font.italic);upgraded.close()
+        backup=storage.ROOT/'workbook_history'/CELL/'project'/(store.revision(old)+'.xlsx')
+        self.assertEqual(backup.read_bytes(),old)
+        first=path.read_bytes();store.initialize(cells=[CELL]);self.assertEqual(path.read_bytes(),first)
+
     def test_original_digital_twin_model_and_live_control_isolation(self):
         from integrations.digital_twin.rack import Rack
         rack=Rack();self.assertEqual(len(rack.cells),12);self.assertFalse(rack.running)

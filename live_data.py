@@ -11,8 +11,9 @@ METRICS={'energy':('Energy density','Wh/kg'),'capacity':('Cell capacity','Ah'),'
 def total(rows,key):
     return float(sum((Decimal(str(r[key])) for r in rows),Decimal(0))) if rows and all(r.get(key) is not None for r in rows) else None
 
-def snapshot(cell):
-    with store.lock(cell):
+def snapshot(cell,books=None):
+    if books is None:
+      with store.lock(cell):
         books={key:store.read(cell,key) for key in ('project','timeline','issues','execution','targets','doe_runs','performance')}
     sheets=lambda key,name:books[key]['sheets'][name]
     info=next(iter(sheets('project','Project Information')), {})
@@ -28,7 +29,7 @@ def snapshot(cell):
     budget['currency']=currency
     budget['remaining']=round(budget['approved']-budget['actual']-budget['committed'],8) if all(budget[k] is not None for k in ('approved','actual','committed')) else None
     today=datetime.now(ZoneInfo('Asia/Ho_Chi_Minh')).date().isoformat()
-    issues=sheets('issues','Issue Register');open_issues=[r for r in issues if r['status']!='Closed']
+    issues=[dict(r) for r in sheets('issues','Issue Register')];open_issues=[r for r in issues if r['status']!='Closed']
     for row in issues:row['color']=warning_color(row['severity'],bool(row['due_date'] and row['due_date']<today and row['status']!='Closed'),row['severity']=='High')
     project_color='Red' if any(r['color']=='Red' for r in open_issues) else 'Amber' if any(r['color']=='Amber' for r in open_issues) or any(r['status']=='Blocked' or (r['baseline'] and (r['forecast'] or r['actual'] or today)>r['baseline'] and r['status'] not in ('Completed','Approved')) for r in milestones) else 'Green' if milestones or issues else 'Grey'
     runs=[r for r in sheets('doe_runs','DOE Runs') if r['status']!='Cancelled']

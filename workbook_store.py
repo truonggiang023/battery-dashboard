@@ -24,6 +24,7 @@ def text(required=False, choices=()): return ('text',required,choices)
 def number(required=False): return ('number',required,())
 def day(required=False): return ('date',required,())
 DATASET=ContextVar('workbook_dataset',default='live')
+HELD_LOCKS=ContextVar('workbook_locks_held',default=frozenset())
 
 @contextmanager
 def scope(dataset):
@@ -110,6 +111,77 @@ for module,sections in CATALOG['sections'].items():
         key='function_'+str(module)+'_'+hashlib.sha256(section.encode()).hexdigest()[:10]
         SCHEMAS[key]=dict(filename=re.sub(r'[\\/*?:\[\]:]','-',section)+'.xlsx',module=int(module),section=section,sheets={name:generic_fields(next((r['information'] for r in CATALOG['records'] if r['module']==int(module) and r['section']==section and sheet_name(r['content'])==name),'')) for name in names})
 
+# Bind the requested logical content to physical Excel tabs. Existing input tab
+# names remain stable; display labels retain punctuation disallowed by Excel.
+from function_tree import GROUPS
+VIEW_FIELDS={'record_id':text(True),'content':text(True),'information':text(),'pic':text(),'status':text()}
+ALIASES={
+ ('project','Ngân sách'):'Budget',
+ ('targets','Energy density (Wh/kg)'):'Energy density',
+ ('targets','Cell capacity (Ah)'):'Cell capacity',
+ ('targets','Cell cost — Prototype / SOP'):'Cell cost - Prototype - SOP',
+}
+COMPUTED={
+ 'project':{'Tiến độ dự án (%)','Milestones hoàn thành','Issues đang mở'},
+ 'targets':{'Cell cost — Prototype / SOP'},
+ 'Project Status':{'Current Phase / Stage Gate','DOE progress','Milestones tiếp theo','Project warning colors'},
+ 'execution':{'Pending / Overdue'},
+ 'timeline':{'Gantt Chart','Planned vs Actual','Critical Activities'},
+ 'performance':{'Capacity Test','Energy / Efficiency','Voltage Curves','Energy Density'},
+}
+EDIT_TARGETS={
+ ('project','Tiến độ dự án (%)'):('timeline','Project Milestones'),
+ ('project','Milestones hoàn thành'):('timeline','Project Milestones'),
+ ('project','Issues đang mở'):('issues','Issue Register'),
+ ('targets','Cell cost — Prototype / SOP'):('targets','Cell cost Prototype'),
+ ('Project Status','Current Phase / Stage Gate'):('project','Project Information'),
+ ('Project Status','DOE progress'):('doe_runs','DOE Runs'),
+ ('Project Status','Milestones tiếp theo'):('timeline','Project Milestones'),
+ ('Project Status','Project warning colors'):('issues','Issue Register'),
+ ('execution','Pending / Overdue'):('execution','Task Master List'),
+ ('timeline','Gantt Chart'):('execution','Task Master List'),
+ ('timeline','Planned vs Actual'):('timeline','Project Milestones'),
+ ('timeline','Critical Activities'):('execution','Task Master List'),
+ ('performance','Capacity Test'):('targets','Cell capacity'),
+ ('performance','Energy / Efficiency'):('targets','Energy density'),
+ ('performance','Voltage Curves'):('performance','Performance Curves'),
+ ('performance','Energy Density'):('targets','Energy density'),
+}
+FUNCTION_TREE=[]
+for module,group,functions in GROUPS:
+    branch={'module':module,'label':group,'functions':[]}
+    for function,children in functions:
+        key=next((key for key,schema in SCHEMAS.items() if schema['module']==module and schema['section']==function),None)
+        if key is None:
+            key='function_'+str(module)+'_'+hashlib.sha256(function.encode()).hexdigest()[:10]
+            SCHEMAS[key]=dict(filename=sheet_name(function)+'.xlsx',module=module,section=function,sheets={})
+        schema=SCHEMAS[key];schema.setdefault('read_only',[]);schema.setdefault('labels',{});schema.setdefault('edit_targets',{})
+        node={'label':function,'book':key,'filename':schema['filename'],'children':[]}
+        for label in children:
+            name=ALIASES.get((key,label),sheet_name(label))
+            readonly=label in COMPUTED.get(key,COMPUTED.get(function,set()))
+            if readonly:
+                schema['sheets'][name]=dict(VIEW_FIELDS)
+                schema['read_only'].append(name)
+                schema['edit_targets'][name]=EDIT_TARGETS.get((key,label),EDIT_TARGETS.get((function,label)))
+            elif name not in schema['sheets']:
+                info=next((r['information'] for r in CATALOG['records'] if r['module']==module and r['content']==label),'')
+                schema['sheets'][name]=generic_fields(info)
+            schema['labels'][name]=label
+            node['children'].append(dict(label=label,sheet=name,read_only=readonly))
+        if not schema['sheets']:schema['sheets']['Information']=generic_fields()
+        primary=[child['sheet'] for child in node['children']]
+        schema['sheets']={**{name:schema['sheets'][name] for name in primary},**{name:fields for name,fields in schema['sheets'].items() if name not in primary}}
+        branch['functions'].append(node)
+    FUNCTION_TREE.append(branch)
+# A pulse-test register supplies DCIR; no impedance is invented from sparse curves.
+SCHEMAS['performance']['sheets'][sheet_name('DCIR / Impedance')]={
+ 'test_id':text(True),'cell_id':text(True),'doe_id':text(),'delta_v':number(True),'delta_i':number(True),'soc_pct':number(True),'temperature_c':number(True),'pulse_window_ms':number(True),'test_date':day(True),'approval':text(True,APPROVAL),'pic':text(True)}
+
+SCHEMAS['performance']['sheets']['Efficiency Inputs']={
+ 'test_id':text(True),'cell_id':text(True),'doe_id':text(),'condition':text(),'charge_energy_wh':number(True),'discharge_energy_wh':number(True),'charge_capacity_ah':number(True),'discharge_capacity_ah':number(True),'test_date':day(True),'approval':text(True,APPROVAL),'pic':text(True)}
+SCHEMAS['performance']['edit_targets'][sheet_name('Energy / Efficiency')]=('performance','Efficiency Inputs')
+
 class DataError(ValueError): pass
 class Conflict(DataError): pass
 
@@ -120,11 +192,18 @@ def path_for(cell,book):
 
 @contextmanager
 def lock(cell):
+    identity=(str(storage.ROOT),DATASET.get(),cell)
+    if identity in HELD_LOCKS.get():
+        yield
+        return
     directory=data_root()/'workbook_locks'; directory.mkdir(parents=True,exist_ok=True)
     with (directory/f'{cell}.lock').open('a') as handle:
         fcntl.flock(handle,fcntl.LOCK_EX)
-        try: yield
-        finally: fcntl.flock(handle,fcntl.LOCK_UN)
+        token=HELD_LOCKS.set(HELD_LOCKS.get()|{identity})
+        try:yield
+        finally:
+            HELD_LOCKS.reset(token)
+            fcntl.flock(handle,fcntl.LOCK_UN)
 
 def revision(content):return hashlib.sha256(content).hexdigest()
 
@@ -143,6 +222,10 @@ def build(book,sheets):
             if choices:
                 dv=DataValidation(type='list',formula1='"'+','.join(choices)+'"',allow_blank=not required);dv.errorTitle='Giá trị không hợp lệ';dv.error='Chọn một giá trị trong danh sách.';dv.showErrorMessage=True;dv.errorStyle='stop';ws.add_data_validation(dv);dv.add(f'{ws.cell(1,col).column_letter}2:{ws.cell(1,col).column_letter}5001')
         ws.sheet_properties.pageSetUpPr.fitToPage=True
+        if name in SCHEMAS[book].get('read_only',[]):
+            ws.protection.sheet=True
+            from openpyxl.comments import Comment
+            ws['A1'].comment=Comment('AUTO-CALCULATED VIEW. Update the editable input sheets through the dashboard.','Battery R&D')
     output=io.BytesIO();wb.save(output);wb.close();return output.getvalue()
 
 def initialize(cells=None):
@@ -152,6 +235,7 @@ def initialize(cells=None):
                 path=path_for(cell,book);path.parent.mkdir(parents=True,exist_ok=True)
                 if not path.exists():
                     with path.open('xb') as handle: handle.write(build(book,{}))
+                else:upgrade(cell,book)
 
 def normalize(book,sheet,rows):
     if not isinstance(rows,list) or len(rows)>5000:raise DataError('Sheet chỉ hỗ trợ tối đa 5000 dòng.')
@@ -170,7 +254,7 @@ def normalize(book,sheet,rows):
                 if isinstance(value,bool):raise DataError(f'{sheet}, dòng {index}: {key} phải là số.')
                 try:value=float(value)
                 except (TypeError,ValueError):raise DataError(f'{sheet}, dòng {index}: {key} phải là số.')
-                if not math.isfinite(value) or (value<0 and key not in ('temperature_c','current_a')):raise DataError(f'{sheet}, dòng {index}: {key} không hợp lệ.')
+                if not math.isfinite(value) or (value<0 and key not in ('temperature_c','current_a','delta_v','delta_i')):raise DataError(f'{sheet}, dòng {index}: {key} không hợp lệ.')
             elif kind=='date':
                 try:value=(value.date() if isinstance(value,datetime) else value) if isinstance(value,(date,datetime)) else date.fromisoformat(str(value))
                 except ValueError:raise DataError(f'{sheet}, dòng {index}: {key} dùng YYYY-MM-DD.')
@@ -201,6 +285,8 @@ def normalize(book,sheet,rows):
             if record['metric_id'].startswith('cost_') and not record['unit'].endswith('/cell'):raise DataError('Cost unit phải có dạng USD/cell hoặc VND/cell.')
             if record['metric_id']=='cycle' and record['retention_threshold'] is None:raise DataError('Target cycle cần retention_threshold (%).')
         if sheet in ('Cell cost Prototype','Cell cost SOP') and record['cost_type']!=('Prototype' if sheet=='Cell cost Prototype' else 'SOP'):raise DataError('cost_type không khớp sheet.')
+        if sheet=='Efficiency Inputs' and (not record['charge_energy_wh'] or not record['charge_capacity_ah']):raise DataError('Charge energy và charge capacity phải >0 để tính hiệu suất.')
+        if sheet==sheet_name('DCIR / Impedance') and (not record['delta_i'] or not record['pulse_window_ms'] or not 0<=record['soc_pct']<=100):raise DataError('DCIR cần delta_i khác 0, pulse_window_ms > 0 và SOC từ 0–100%.')
         if sheet=='Performance Curves' and record.get('retention_pct') is not None and record['retention_pct']>100:raise DataError('retention_pct phải từ 0 đến 100.')
         if sheet=='Cell Mapping':
             if not record['height_mm']:raise DataError('Chiều cao cell phải >0.')
@@ -248,32 +334,73 @@ def read(cell,book):
 
 def save_sheet(cell,book,sheet,rows,expected_revision,actor="local"):
     if book not in SCHEMAS or sheet not in SCHEMAS[book]['sheets']:raise DataError('Workbook hoặc sheet không hợp lệ.')
+    if sheet in SCHEMAS[book].get('read_only',[]):raise DataError('Sheet tổng hợp chỉ đọc. Cập nhật các sheet dữ liệu gốc để tính lại.')
     normalized=normalize(book,sheet,rows)
     with lock(cell):
         current=read(cell,book)
         if not expected_revision or current['revision']!=expected_revision:raise Conflict('File đã thay đổi. Tải lại sheet trước khi lưu để tránh ghi đè dữ liệu của người khác.')
-        path=path_for(cell,book);previous=path.read_bytes()
-        if revision(previous)!=current['revision']:raise Conflict('File Excel vừa thay đổi bên ngoài. Tải lại trước khi lưu.')
-        backup=data_root()/'workbook_history'/cell/book;backup.mkdir(parents=True,exist_ok=True)
-        old=backup/f'{current["revision"]}.xlsx'
-        if not old.exists():
-            with old.open('xb') as handle:handle.write(previous);handle.flush();os.fsync(handle.fileno())
         current['sheets'][sheet]=normalized
         if book=='digital_twin':
             mapped={r['cell_id'] for r in current['sheets']['Cell Mapping']}
             if any(r['cell_id'] not in mapped for r in current['sheets']['Cell State']):raise DataError('Cell State chứa Cell ID chưa có trong Cell Mapping.')
         content=build(book,current['sheets'])
-        fd,temporary=tempfile.mkstemp(dir=path.parent,suffix='.xlsx')
-        try:
-            with os.fdopen(fd,'wb') as handle:handle.write(content);handle.flush();os.fsync(handle.fileno())
-            if revision(path.read_bytes())!=current['revision']:raise Conflict('File Excel vừa thay đổi. Dữ liệu chưa được ghi đè; hãy tải lại file.')
-            os.replace(temporary,path)
-            descriptor=os.open(path.parent,os.O_RDONLY)
-            try:os.fsync(descriptor)
-            finally:os.close(descriptor)
-        finally:
-            if os.path.exists(temporary):os.unlink(temporary)
-        with (backup/'audit.jsonl').open('a') as audit:
-            audit.write(json.dumps(dict(timestamp=datetime.now(timezone.utc).isoformat(),actor=actor,book=book,sheet=sheet,previous=current['revision'],revision=revision(content),rows=len(normalized)),ensure_ascii=False)+'\n')
-            audit.flush();os.fsync(audit.fileno())
+        replace_content(cell,book,content,current['revision'],actor,'save_sheet',sheet,len(normalized))
         return read(cell,book)
+
+
+def replace_content(cell,book,content,expected,actor,action,sheet='',rows=0):
+    """Called under the cell lock; archive the exact previous file before replacing."""
+    path=path_for(cell,book);previous=path.read_bytes()
+    if revision(previous)!=expected:raise Conflict('File Excel vừa thay đổi. Tải lại trước khi lưu.')
+    backup=data_root()/'workbook_history'/cell/book;backup.mkdir(parents=True,exist_ok=True)
+    old=backup/f'{expected}.xlsx'
+    if not old.exists():
+        with old.open('xb') as handle:handle.write(previous);handle.flush();os.fsync(handle.fileno())
+    fd,temporary=tempfile.mkstemp(dir=path.parent,suffix='.xlsx')
+    try:
+        with os.fdopen(fd,'wb') as handle:handle.write(content);handle.flush();os.fsync(handle.fileno())
+        if revision(path.read_bytes())!=expected:raise Conflict('File Excel vừa thay đổi. Dữ liệu chưa bị ghi đè.')
+        os.replace(temporary,path)
+        descriptor=os.open(path.parent,os.O_RDONLY)
+        try:os.fsync(descriptor)
+        finally:os.close(descriptor)
+    finally:
+        if os.path.exists(temporary):os.unlink(temporary)
+    with (backup/'audit.jsonl').open('a') as audit:
+        audit.write(json.dumps(dict(timestamp=datetime.now(timezone.utc).isoformat(),actor=actor,action=action,book=book,sheet=sheet,previous=expected,revision=revision(content),rows=rows),ensure_ascii=False)+'\n')
+        audit.flush();os.fsync(audit.fileno())
+
+
+def upgrade(cell,book):
+    """Add missing tabs. Only computed tabs may have their schema replaced.
+
+    Editable tabs, unknown sheets, user formatting and values are preserved.
+    Invalid user-modified input headers are left untouched and rejected on read.
+    """
+    path=path_for(cell,book);original=path.read_bytes()
+    try:wb=load_workbook(io.BytesIO(original))
+    except Exception:return
+    schema=SCHEMAS[book];readonly=schema.get('read_only',[])
+    try:
+        if set(wb.sheetnames)-set(schema['sheets']):return
+        for name in wb.sheetnames:
+            if name not in readonly and [c.value for c in wb[name][1]]!=list(schema['sheets'][name]):return
+        changed=[]
+        for name,fields in schema['sheets'].items():
+            if name in wb.sheetnames and [c.value for c in wb[name][1]]==list(fields):continue
+            if name in wb.sheetnames:
+                if name not in readonly:return
+                position=wb.sheetnames.index(name);wb.remove(wb[name]);ws=wb.create_sheet(name,position)
+            else:ws=wb.create_sheet(name)
+            ws.append(list(fields));ws.freeze_panes='A2'
+            for c in ws[1]:
+                c.font=Font(color='FFFFFF',bold=True);c.fill=PatternFill('solid',fgColor='1B354A');ws.column_dimensions[c.column_letter].width=max(18,min(35,len(str(c.value))+4))
+            if name in readonly:ws.protection.sheet=True
+            changed.append(name)
+        if wb.sheetnames!=list(schema['sheets']):
+            for index,name in enumerate(schema['sheets']):wb.move_sheet(wb[name],offset=index-wb.sheetnames.index(name))
+            changed.append('sheet_order')
+        if changed:
+            output=io.BytesIO();wb.save(output)
+            replace_content(cell,book,output.getvalue(),revision(original),'system','schema_add_sheets',', '.join(changed))
+    finally:wb.close()

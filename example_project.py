@@ -47,7 +47,8 @@ def inputs():
     for i in range(21):
         curves.append(dict(record_id=f'CYCLE-{i:03}',series='DEMO · DOE-002',cycle_number=i*50,retention_pct=100-i*.55,voltage=None,discharged_capacity_ah=None,time_s=None,current_a=None,doe_id='DOE-002',cell_id='CELL-DEMO-001',approval='Approved',pic='Testing · Demo'))
         curves.append(dict(record_id=f'DISCH-{i:03}',series='DEMO · 0.33C / 25C',cycle_number=None,retention_pct=None,voltage=round(3.4-.2*i/20-.65*(i/20)**10,4),discharged_capacity_ah=round(103.2*i/20,3),time_s=i*540,current_a=-34.4,doe_id='DOE-002',cell_id='CELL-DEMO-001',approval='Approved',pic='Testing · Demo'))
-    result['performance']={'Performance Curves':curves}
+    result['performance']={'Performance Curves':curves,'Efficiency Inputs':[dict(test_id='EFF-DEMO-001',cell_id='CELL-DEMO-001',doe_id='DOE-002',condition='0.33C / 25C',charge_energy_wh=350,discharge_energy_wh=338.2,charge_capacity_ah=104,discharge_capacity_ah=103.2,test_date='2026-10-19',approval='Approved',pic='Testing · Demo')]}
+    result['performance']['DCIR - Impedance']=[dict(test_id='DCIR-DEMO-001',cell_id='CELL-DEMO-001',doe_id='DOE-002',delta_v=-0.02,delta_i=-20,soc_pct=50,temperature_c=25,pulse_window_ms=10000,test_date='2026-10-19',approval='Approved',pic='Testing · Demo')]
     mapping=[dict(cell_id=f'CELL-DEMO-{i:03}',model='52148117',form_factor='Prismatic',diameter_mm=None,height_mm=117,width_mm=148,thickness_mm=52,model_revision='DEMO-A',geometry_ref='Generated geometry · example only',device='TWIN-DEMO-01',channel=f'CH-{i:02}',pic='Digital Twin · Demo') for i in range(1,5)]
     states=[]
     for step in range(13):
@@ -62,11 +63,16 @@ def initialize():
         data=inputs()
         for key,schema in store.SCHEMAS.items():
             path=store.path_for(EXAMPLE_CELL,key)
-            if path.exists():continue
+            if path.exists():
+                with store.lock(EXAMPLE_CELL):store.upgrade(EXAMPLE_CELL,key)
+                continue
             sheets=data.get(key,{})
             if key.startswith('function_'):
                 sheets={}
                 for index,(name,fields) in enumerate(schema['sheets'].items()):
+                    if name in schema.get('read_only',[]):
+                        sheets[name]=[]
+                        continue
                     row={key:None for key in fields}
                     row.update(entry_id=f'DEMO-{index+1:03}',pic='Engineering · Demo',status='Open',revision='A',approval='Draft',doe_id='DOE-002',build_lot_id='LOT-DEMO-002',cell_id='CELL-DEMO-001',notes='Dữ liệu ví dụ, không phải kết quả thử nghiệm.')
                     for field in fields:

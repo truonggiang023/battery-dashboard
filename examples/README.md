@@ -23,3 +23,5 @@ Các file quản lý còn có PIC, tasks, DOE run, weekly report, issue và mile
 App tự tạo cùng bộ ví dụ từ `example_project.py` khi khởi động lần đầu, trong thư mục riêng `data/example_data/`; không ghi vào dataset `[THỰC]`. Không reset file ví dụ sau khi người dùng đã chỉnh sửa.
 
 Cycler 3D dùng lại model của repo Digital-Twin theo phiên bản được ghi trong PROVENANCE. Model gốc khoảng 2.5–2.775 Ah không hiệu chuẩn cho cell 105 Ah ở bảng ví dụ; telemetry mô phỏng không tự ghi vào các sheet Approved.
+
+Bộ mẫu gồm **37 workbook**, bao phủ đủ [30 function / 110 nội dung con](../docs/CONTENT_TREE.md) và các file hỗ trợ DOE/3D. Sheet Σ đã được tính từ dữ liệu nguồn; chỉnh tại các tab nhập liệu. Ví dụ Efficiency Inputs: 350 Wh nạp, 338.2 Wh xả → EE 96.63%; DCIR: ΔV −0.02 V / ΔI −20 A → 1 mΩ (10 s, SOC 50%, 25°C). Đây là số minh họa.

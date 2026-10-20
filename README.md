@@ -34,7 +34,7 @@ Bấm **Tải bộ Excel của cell** trong phần chọn cell để lấy toàn
 
 ```text
 01_PMO/
-├── Project Information & KPI.xlsx  # Project Information, Budget
+├── Project Information & KPI.xlsx  # Thông tin, tiến độ, Budget, milestones, issues
 ├── Target vs Actual.xlsx          # Targets, Energy density, Cell capacity,
 │                                 # Cycle life predicted, Cell cost Prototype/SOP
 ├── Master Timeline.xlsx           # Project Milestones
@@ -93,3 +93,7 @@ node --check static/app.js
 ```
 
 Bộ kiểm thử xác minh tính KPI, tách dữ liệu thật/ví dụ, revision conflicts, cập nhật Excel ngoài app, điều kiện đo, file history, đăng nhập, mapping cell và safety STOP của mô hình gốc.
+
+## Cây nội dung chức năng
+
+Đã ánh xạ đủ **30 function / 110 nội dung con** theo [bảng chi tiết](docs/CONTENT_TREE.md). Bấm **Cây nội dung các function** để mở trong vùng chính. Sidebar vẫn phẳng theo mẫu. Mỗi function là một workbook, nội dung con là sheet. Các tab **Σ Tổng hợp** tự tính từ sheet gốc, chỉ đọc; **Cập nhật nội dung gốc** mở đúng nơi nhập liệu. File hiện có được bổ sung tab còn thiếu và lưu bản trước trong lịch sử, giữ nguyên dữ liệu nhập.

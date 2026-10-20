@@ -63,3 +63,9 @@ Bấm **Cycler · 3D Cell Digital Twin** ở vùng nội dung.
 ## Sao lưu và khôi phục
 
 Dừng app trước khi sao lưu toàn bộ `data/`; giữ project workbooks, example_data, history, audit, sources và metadata cũ. Không chỉ sao lưu code Git. File `.xlsx` cũ trong history có tên SHA-256; trước khi khôi phục hãy sao lưu bản hiện tại và kiểm tra đúng cell/book. Hiện chưa có nút restore để tránh khôi phục nhầm dữ liệu.
+
+## Nội dung tổng hợp tự động
+
+Xem [30 function và 110 nội dung con](CONTENT_TREE.md). Các sheet Σ chỉ đọc: tiến độ, milestones/issue summary, Project Status, Pending / Overdue, Gantt, Planned vs Actual, Critical Activities và các kết quả Electrical Performance. Chỉnh ở sheet nguồn qua nút **Cập nhật nội dung gốc**. Không nhập lại kết quả tổng hợp.
+
+Gantt dùng planned/due date của Task Master List. Critical Activities dùng task có priority Critical hoặc milestone Blocked; chưa tính đường găng CPM. Energy / Efficiency lấy các bản ghi Approved trong Efficiency Inputs. DCIR tính từ |ΔV/ΔI| × 1000 mΩ; cần điều kiện đo và khoảng xung.

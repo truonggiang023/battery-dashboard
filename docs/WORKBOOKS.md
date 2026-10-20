@@ -1,20 +1,22 @@
 # Danh mục workbook và sheet
 
-Mỗi mục chức năng = một file Excel. Nội dung con = sheet, không phải folder hoặc file riêng.
+30 function theo bảng yêu cầu và 7 workbook hỗ trợ DOE/3D đã có: tổng 37 file cho mỗi cell. Không tạo file riêng cho từng nội dung con. Xem [cây nội dung đầy đủ](CONTENT_TREE.md).
+
+Σ: tổng hợp tự động, chỉ đọc. Các sheet còn lại là dữ liệu đầu vào.
 
 | Team/module | File Excel | Sheets |
 | --- | --- | --- |
-| 00_Project_Management | Project Information & KPI.xlsx | Project Information; Budget |
-| 00_Project_Management | Target vs Actual.xlsx | Targets; Energy density; Cell capacity; Cycle life predicted; Cell cost Prototype; Cell cost SOP |
-| 00_Project_Management | Master Timeline.xlsx | Project Milestones |
+| 00_Project_Management | Project Information & KPI.xlsx | Project Information; Σ Tiến độ dự án (%); Budget; Σ Milestones hoàn thành; Σ Issues đang mở |
+| 00_Project_Management | Target vs Actual.xlsx | Energy density; Cell capacity; Cycle life predicted; Σ Cell cost - Prototype - SOP; Targets; Cell cost Prototype; Cell cost SOP |
+| 00_Project_Management | Master Timeline.xlsx | Project Milestones; Σ Gantt Chart; Σ Planned vs Actual; Σ Critical Activities |
 | 00_Project_Management | Rủi ro & Sự vụ.xlsx | Issue Register |
-| 00_Project_Management | Execution Control.xlsx | Task Master List; Action Tracking; Deliverables |
+| 00_Project_Management | Execution Control.xlsx | Task Master List; Action Tracking; Deliverables; Σ Pending - Overdue |
 | 00_Project_Management | Cấu trúc & PIC.xlsx | Organization Structure; PIC Assignment |
 | 00_Project_Management | Báo cáo tuần.xlsx | Weekly Progress; Completed Activities; Next Week Plan; Open Issues |
 | 03_DOE | DOE Run Tracking.xlsx | DOE Runs |
-| 06_Cell_Analysis | Electrical Performance.xlsx | Performance Curves |
+| 06_Cell_Analysis | Electrical Performance.xlsx | Σ Capacity Test; Σ Energy - Efficiency; DCIR - Impedance; Σ Voltage Curves; Σ Energy Density; Performance Curves; Efficiency Inputs |
 | 08_Data_Analytics | Cycler - 3D Cell Digital Twin.xlsx | Cell Mapping; Cell State |
-| 00_Project_Management | Project Status.xlsx | Current Phase - Stage Gate; DOE progress; Milestones tiếp theo; Project warning colors |
+| 00_Project_Management | Project Status.xlsx | Σ Current Phase - Stage Gate; Σ DOE progress; Σ Milestones tiếp theo; Σ Project warning colors |
 | 01_Cell_Design | Cell Specifications.xlsx | Cell identity; Electrical targets; Energy & power; Physical envelope; Reliability & safety; Cost & compliance |
 | 01_Cell_Design | DOE Master Plan.xlsx | Cell balancing; Electrode dimensions; Cathode design; Anode design; Electrolyte design; Design calculations |
 | 01_Cell_Design | Mechanical Design.xlsx | 2D - 3D Drawings; Specifications - GD&T |
@@ -38,7 +40,8 @@ Mỗi mục chức năng = một file Excel. Nội dung con = sheet, không ph�
 | 08_Data_Analytics | Engineering Data & Dashboard.xlsx | Simulation Data; DOE Comparison Analytics |
 | 08_Data_Analytics | 3D Virtual Operation.xlsx | 3D Virtual Operation |
 | 09_Document_Control | Engineering Documents.xlsx | Engineering Drawings; Technical Specifications; Standards - Requirements |
+| 05_Validation_Testing | Test Plan.xlsx | Test Plan |
+| 05_Validation_Testing | Test Matrix.xlsx | Test Matrix |
+| 05_Validation_Testing | Sample Tracking.xlsx | Sample Tracking |
 
-Các schema chuyên trách quản lý KPI/đo đạc được kiểm tra số, unit, ngày và approval. Các schema kỹ thuật còn lại có cột text từ bảng Information do người dùng cung cấp, không tự chạy mô hình vật lý.
-
-Giữ nguyên tên file, sheet và header; các tên sheet được rút gọn theo giới hạn 31 ký tự của Excel.
+Giữ nguyên header và tên sheet. Excel giới hạn tên sheet 31 ký tự; giao diện vẫn hiện đầy đủ tên nội dung gốc. Không nhập công thức Excel hoặc tự thêm tab; nhập giá trị ở tab nguồn. Sheet tổng hợp được app tính lại khi đọc/cập nhật/xuất file.

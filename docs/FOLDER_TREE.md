@@ -52,6 +52,9 @@ Mỗi cell có cùng 10 module. Tên ngắn ở `data/teams/` là shortcut; file
     Production Control.xlsx
   05_Validation_Testing/
     Test Categories.xlsx
+    Test Plan.xlsx
+    Test Matrix.xlsx
+    Sample Tracking.xlsx
   06_Cell_Analysis/
     Electrical Performance.xlsx
     Cycle Life Analysis.xlsx
